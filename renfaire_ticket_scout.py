@@ -1739,19 +1739,9 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
             </div>
         </div>
         <form class="alert-form" onsubmit="subscribeAlerts(event)">
-            <input type="text" id="subName" class="alert-input" placeholder="Your Name" style="width:130px;" required>
-            <input type="tel" id="subPhone" class="alert-input" placeholder="10-Digit Phone (optional)" style="width:175px;">
-            <select id="subCarrier" class="alert-select">
-                <option value="verizon">Verizon (Free SMS)</option>
-                <option value="att">AT&amp;T (Free SMS)</option>
-                <option value="tmobile">T-Mobile / Mint (Free SMS)</option>
-                <option value="visible">Visible / Xfinity (Free SMS)</option>
-                <option value="cricket">Cricket (Free SMS)</option>
-                <option value="boost">Boost Mobile (Free SMS)</option>
-                <option value="googlefi">Google Fi (Free SMS)</option>
-                <option value="uscellular">US Cellular (Free SMS)</option>
-            </select>
-            <input type="email" id="subEmail" class="alert-input" placeholder="Email Address (optional)" style="width:210px;">
+            <input type="text" id="subName" class="alert-input" placeholder="Your Name" style="width:140px;" required>
+            <input type="tel" id="subPhone" class="alert-input" placeholder="10-Digit Phone # (optional)" style="width:190px;">
+            <input type="email" id="subEmail" class="alert-input" placeholder="Email Address (optional)" style="width:220px;">
             <button type="submit" class="btn-sub">📲 Subscribe to Free Alerts</button>
             <span id="subMsg" class="sub" style="margin-left:6px;"></span>
         </form>
@@ -1868,7 +1858,6 @@ async function subscribeAlerts(ev) {{
     ev.preventDefault();
     const name = document.getElementById('subName').value.trim();
     const phone = document.getElementById('subPhone').value.trim();
-    const carrier = document.getElementById('subCarrier').value;
     const email = document.getElementById('subEmail').value.trim();
     const msgEl = document.getElementById('subMsg');
     if (!phone && !email) {{
@@ -1883,7 +1872,7 @@ async function subscribeAlerts(ev) {{
         const res = await fetch('/api/subscribe', {{
             method: 'POST',
             headers: {{'Content-Type': 'application/json'}},
-            body: JSON.stringify({{name, phone, carrier, email}})
+            body: JSON.stringify({{name, phone, email}})
         }});
         const data = await res.json();
         if (!data.ok) {{
@@ -1924,7 +1913,7 @@ async function syncTeamState() {{
                 subBox.innerHTML = '👥 No SMS/Email subscribers yet — be the first to sign up above!';
             }} else {{
                 subBox.innerHTML = '👥 <b>Active Alert Subscribers (' + subs.length + '):</b> ' + subs.map(s => {{
-                    const contact = [s.masked_phone ? (s.masked_phone + (s.carrier ? ' ' + s.carrier.toUpperCase() : '')) : '', s.masked_email || ''].filter(Boolean).join(' / ');
+                    const contact = [s.masked_phone || '', s.masked_email || ''].filter(Boolean).join(' / ');
                     return `<span class="sub-pill">📲 <b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
                 }}).join('');
             }}
