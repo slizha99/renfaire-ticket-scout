@@ -1679,6 +1679,41 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
         background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444;
         color: #fecaca; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-top: 6px;
     }}
+    .alert-bar {{
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+        border: 1px solid #3b82f6; border-radius: 14px; padding: 16px 22px; margin-bottom: 20px;
+        display: flex; flex-direction: column; gap: 12px;
+    }}
+    .alert-top {{
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }}
+    .alert-form {{
+        display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }}
+    .alert-input, .alert-select {{
+        background: #0f172a; border: 1px solid var(--border); color: var(--text);
+        padding: 8px 11px; border-radius: 8px; font-size: 13px;
+    }}
+    .alert-input:focus, .alert-select:focus {{ outline: none; border-color: #60a5fa; }}
+    .btn-sub {{
+        cursor: pointer; background: #2563eb; color: #ffffff; border: 1px solid #3b82f6;
+        padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: 0.15s;
+    }}
+    .btn-sub:hover {{ background: #1d4ed8; }}
+    .btn-push {{
+        cursor: pointer; background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid #059669;
+        padding: 7px 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; text-decoration: none;
+        display: inline-block; transition: 0.15s;
+    }}
+    .btn-push:hover {{ background: rgba(16, 185, 129, 0.28); }}
+    .sub-pill {{
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(59, 130, 246, 0.16); border: 1px solid #334155;
+        color: #cbd5e1; padding: 3px 9px; border-radius: 999px; font-size: 12px; margin-right: 6px; margin-top: 4px;
+    }}
+    .sub-del {{
+        cursor: pointer; color: #f87171; font-weight: 700; border: none; background: none; padding: 0 2px; font-size: 12px;
+    }}
 </style>
 </head>
 <body>
@@ -1687,8 +1722,40 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
             <h1>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout & Scam Auditor</h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:6px; font-size:12px; color:#93c5fd;">🔎 <b>Active Search Vocabulary:</b> {html.escape(active_terms_str)} &nbsp;|&nbsp; 🧠 <b>Auto-Learned from Posts:</b> {html.escape(learned_str)}</p>
+            <p style="margin-top:4px; font-size:12px; color:#a7f3d0;">🔗 <b>Permanent Partiful Link:</b> <a href="https://slizha99.github.io/renfaire-ticket-scout/" target="_blank" style="color:#34d399; font-weight:600;">https://slizha99.github.io/renfaire-ticket-scout/</a></p>
         </div>
         <div class="status-pill">● Live Shared Board (Auto-syncs) | Last Sweep: {last_scan_str}</div>
+    </div>
+
+    <div class="alert-bar">
+        <div class="alert-top">
+            <div>
+                <div style="font-size:15px; font-weight:700; color:#f8fafc;">🔔 Get Free Instant Ticket Alerts (SMS / Email / Push)</div>
+                <div class="sub" style="margin-top:2px;">Sign up to get pinged the moment a new Low or Medium Risk Saturday, Oct 24 ticket seller post is found.</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="https://ntfy.sh/norcal_renfaire_oct24_tickets" target="_blank" class="btn-push">📱 1-Tap Mobile Push Feed (ntfy) ↗</a>
+                <button type="button" class="btn-push" id="btnBrowserPush" onclick="enableBrowserNotifications()">🔊 Enable Browser Push & Sound</button>
+            </div>
+        </div>
+        <form class="alert-form" onsubmit="subscribeAlerts(event)">
+            <input type="text" id="subName" class="alert-input" placeholder="Your Name" style="width:130px;" required>
+            <input type="tel" id="subPhone" class="alert-input" placeholder="10-Digit Phone (optional)" style="width:175px;">
+            <select id="subCarrier" class="alert-select">
+                <option value="verizon">Verizon (Free SMS)</option>
+                <option value="att">AT&amp;T (Free SMS)</option>
+                <option value="tmobile">T-Mobile / Mint (Free SMS)</option>
+                <option value="visible">Visible / Xfinity (Free SMS)</option>
+                <option value="cricket">Cricket (Free SMS)</option>
+                <option value="boost">Boost Mobile (Free SMS)</option>
+                <option value="googlefi">Google Fi (Free SMS)</option>
+                <option value="uscellular">US Cellular (Free SMS)</option>
+            </select>
+            <input type="email" id="subEmail" class="alert-input" placeholder="Email Address (optional)" style="width:210px;">
+            <button type="submit" class="btn-sub">📲 Subscribe to Free Alerts</button>
+            <span id="subMsg" class="sub" style="margin-left:6px;"></span>
+        </form>
+        <div id="subscribersListBox" class="sub"></div>
     </div>
 
     <div class="stats">
@@ -1732,11 +1799,136 @@ function esc(s) {{
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }}
 
+function playTicketChime() {{
+    try {{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {{
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.12);
+            osc.stop(ctx.currentTime + idx * 0.12 + 0.35);
+        }});
+    }} catch (e) {{}}
+}}
+
+async function enableBrowserNotifications() {{
+    const btn = document.getElementById('btnBrowserPush');
+    if ('Notification' in window) {{
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {{
+            localStorage.setItem('renfaire_browser_push', '1');
+            btn.textContent = '✅ Browser Push & Sound Active';
+            playTicketChime();
+            new Notification('🏰 NorCal Ren Faire Ticket Alerts Active!', {{
+                body: 'You will get an instant alert + chime when a Saturday Oct 24 ticket is found.'
+            }});
+            return;
+        }}
+    }}
+    localStorage.setItem('renfaire_browser_push', '1');
+    btn.textContent = '✅ Sound Chime Active';
+    playTicketChime();
+}}
+
+function checkNewRowsForBrowserAlert() {{
+    if (localStorage.getItem('renfaire_browser_push') === '1') {{
+        const btn = document.getElementById('btnBrowserPush');
+        if (btn) btn.textContent = '✅ Browser Push & Sound Active';
+    }}
+    const seenRaw = localStorage.getItem('renfaire_seen_alert_ids');
+    const seenIds = new Set(seenRaw ? JSON.parse(seenRaw) : []);
+    let foundNewPromising = null;
+    document.querySelectorAll('tr.row-item').forEach(row => {{
+        const id = row.getAttribute('data-id');
+        const risk = row.getAttribute('data-risk');
+        if (id && !seenIds.has(id)) {{
+            seenIds.add(id);
+            if (risk === 'badge-low' || risk === 'badge-med') {{
+                const titleEl = row.querySelector('.post-title');
+                foundNewPromising = titleEl ? titleEl.textContent : 'New Saturday Oct 24 Ticket Lead!';
+            }}
+        }}
+    }});
+    localStorage.setItem('renfaire_seen_alert_ids', JSON.stringify(Array.from(seenIds)));
+    if (foundNewPromising && seenRaw && localStorage.getItem('renfaire_browser_push') === '1') {{
+        playTicketChime();
+        if ('Notification' in window && Notification.permission === 'granted') {{
+            new Notification('🏰 New Sat Oct 24 Ticket Found!', {{ body: foundNewPromising }});
+        }}
+    }}
+}}
+
+async function subscribeAlerts(ev) {{
+    ev.preventDefault();
+    const name = document.getElementById('subName').value.trim();
+    const phone = document.getElementById('subPhone').value.trim();
+    const carrier = document.getElementById('subCarrier').value;
+    const email = document.getElementById('subEmail').value.trim();
+    const msgEl = document.getElementById('subMsg');
+    if (!phone && !email) {{
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Enter a 10-digit phone number or email address.';
+        return;
+    }}
+    if (name) localStorage.setItem('renfaire_user_name', name);
+    msgEl.style.color = '#93c5fd';
+    msgEl.textContent = 'Subscribing...';
+    try {{
+        const res = await fetch('/api/subscribe', {{
+            method: 'POST',
+            headers: {{'Content-Type': 'application/json'}},
+            body: JSON.stringify({{name, phone, carrier, email}})
+        }});
+        const data = await res.json();
+        if (!data.ok) {{
+            msgEl.style.color = '#f87171';
+            msgEl.textContent = data.error || 'Could not subscribe.';
+        }} else {{
+            msgEl.style.color = '#34d399';
+            msgEl.textContent = '✅ Subscribed to instant ticket alerts!';
+            document.getElementById('subPhone').value = '';
+            document.getElementById('subEmail').value = '';
+            syncTeamState();
+        }}
+    }} catch (e) {{
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Connection error.';
+    }}
+}}
+
+async function unsubscribeAlert(id) {{
+    if (!confirm('Remove this alert subscription?')) return;
+    await fetch('/api/unsubscribe', {{
+        method: 'POST',
+        headers: {{'Content-Type': 'application/json'}},
+        body: JSON.stringify({{id}})
+    }});
+    syncTeamState();
+}}
+
 async function syncTeamState() {{
     try {{
         const res = await fetch('/api/state?t=' + Date.now());
         if (!res.ok) return;
         const state = await res.json();
+        const subs = state.subscribers || [];
+        const subBox = document.getElementById('subscribersListBox');
+        if (subBox) {{
+            if (subs.length === 0) {{
+                subBox.innerHTML = '👥 No SMS/Email subscribers yet — be the first to sign up above!';
+            }} else {{
+                subBox.innerHTML = '👥 <b>Active Alert Subscribers (' + subs.length + '):</b> ' + subs.map(s => {{
+                    const contact = [s.masked_phone ? (s.masked_phone + (s.carrier ? ' ' + s.carrier.toUpperCase() : '')) : '', s.masked_email || ''].filter(Boolean).join(' / ');
+                    return `<span class="sub-pill">📲 <b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
+                }}).join('');
+            }}
+        }}
         document.querySelectorAll('tr.row-item').forEach(row => {{
             const id = row.getAttribute('data-id');
             const claimBox = row.querySelector('.claim-status-box');
@@ -1800,9 +1992,18 @@ async function reportListing(id) {{
     }}
 }}
 
+const savedUser = localStorage.getItem('renfaire_user_name');
+if (savedUser && document.getElementById('subName')) {{
+    document.getElementById('subName').value = savedUser;
+}}
+checkNewRowsForBrowserAlert();
 syncTeamState();
 setInterval(syncTeamState, 3000);
-setInterval(() => {{ if (!isDialogOpen) window.location.reload(); }}, 45000);
+setInterval(() => {{
+    const activeTag = document.activeElement ? document.activeElement.tagName : '';
+    const isTyping = ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeTag);
+    if (!isDialogOpen && !isTyping) window.location.reload();
+}}, 45000);
 </script>
 </body>
 </html>"""
@@ -1844,7 +2045,7 @@ def print_listing_report(listing: TicketListing) -> None:
 
 
 def sync_permanent_partiful_link() -> None:
-    """Ensure dashboard_server + cloudflared tunnel are running and keep https://spoo.me/renfaire-tickets pointed to the active tunnel."""
+    """Ensure dashboard_server + cloudflared tunnel are running and keep https://slizha99.github.io/renfaire-ticket-scout/ pointed to the active tunnel."""
     try:
         urllib.request.urlopen("http://127.0.0.1:8765/api/state", timeout=3)
     except Exception:
@@ -1947,6 +2148,15 @@ def run_scan(
         ]
         if promising_new:
             send_desktop_alert(promising_new[0])
+            try:
+                from ticket_alerts import broadcast_new_ticket_alerts
+                subs: list[dict[str, Any]] = []
+                state_path = Path("team_state.json")
+                if state_path.exists():
+                    subs = json.loads(state_path.read_text(encoding="utf-8")).get("subscribers", [])
+                broadcast_new_ticket_alerts(promising_new, subs)
+            except Exception:
+                pass
 
     return new_listings
 
