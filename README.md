@@ -1,5 +1,7 @@
 # 🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout & Scam Auditor
 
+### 👉 **[Click Here to Open the Live Interactive Ticket Dashboard (`slizha99.github.io/renfaire-ticket-scout`)](https://slizha99.github.io/renfaire-ticket-scout/)**
+
 Live multi-platform ticket scout, holistic post & comment evaluator, scam/bot risk scorer, and real-time collaborative web dashboard for finding **Saturday, October 24, 2026** admission tickets to the **Northern California Renaissance Faire** (Casa de Fruta / Hollister, CA).
 
 ## ✨ Features
