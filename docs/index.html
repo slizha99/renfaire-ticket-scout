@@ -7,9 +7,11 @@
 <body style="background:#0f172a;color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;">
 <div>
   <h2 style="margin-bottom:8px;">🏰 Connecting to Live NorCal Ren Faire Ticket Board...</h2>
-  <p style="color:#94a3b8;font-size:14px;">Redirecting automatically to the active tunnel...</p>
+  <p style="color:#94a3b8;font-size:14px;">Redirecting automatically to the active dashboard...</p>
+  <p style="margin-top:16px;"><a id="directLink" href="https://merry-respective-mountain-par.trycloudflare.com" style="color:#34d399;font-weight:600;">Click here if not redirected automatically ↗</a></p>
 </div>
 <script>
+const FALLBACK_URL = 'https://merry-respective-mountain-par.trycloudflare.com';
 fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1')
   .then(r => r.text())
   .then(t => {
@@ -18,11 +20,16 @@ fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1')
       try {
         const obj = JSON.parse(lines[i]);
         if (obj && obj.message && obj.message.startsWith('https://')) {
+          document.getElementById('directLink').href = obj.message;
           window.top.location.replace(obj.message);
           return;
         }
       } catch (e) {}
     }
+    window.top.location.replace(FALLBACK_URL);
+  })
+  .catch(() => {
+    window.top.location.replace(FALLBACK_URL);
   });
 </script>
 </body>
