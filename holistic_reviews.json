@@ -1,0 +1,497 @@
+{
+  "|[SELLING] I can sell you Northern California Renaissance Faire|Seller: Stephieecee · 1 d ago (Seller appears on 1 date section(s) on VouchFirst)": {
+    "is_valid": true,
+    "reason": null,
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|[SELLING] Selling 1 general admission ticket to the Northern California Renaissance Faire (NorCal Ren Faire) 2026.|Seller: Vini-vidi 7 d ago (Seller appears on 2 date section(s) on VouchFirst)": {
+    "is_valid": true,
+    "reason": null,
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Renaissance Faire - Looking for One Ticket for Saturday, October 10th|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Norcal Ren Fair Sat 10/10 (trade for Sun 10/11 or selling)|I accidentally bought tickets for the NorCal Ren Fair for Sat 10/10 instead of Sun 10/11. Anyone willing to trade or buy off me??? [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Comment by u/kayunkay: Selling one NorCal ren faire ticket for sat 10/10! |Selling one NorCal ren faire ticket for sat 10/10!": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Anybody selling tickets to Northern California renaissance fair tomorrow 10/10?!|[Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Any updates on if Northern California ren fair will have more tickets available for tomorr|[Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Comment by u/Prior-Lengthiness341: Sorry know this post is from a while ago but is this in reference to t|Sorry know this post is from a while ago but is this in reference to the NorCal Renaissance Faire? In a similar situation, it says sold out on their website and across all their social media pa": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-09 for a past Faire weekend (not Saturday, Oct 24)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|looking for 2 tickets for nor cal ren faire!!|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying Nor Cal Ren Faire Ticket 10/10|Hello! I’m going to the Northern California renaissance faire tomorrow 10/10 with my partner and friend, another friend was planning to go and could not get a ticket. This is a long shot but is anyone selling a single ticket? [Comments Audit: 2 comments on this": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Long shot- Nor Cal Ren Faire tickets 10/10|Hopefully this okay to post! It’s a long shot but a girl’s trying to help a friend out 🥲 she’s looking for a ticket to the renaissance faire tomorrow 10/10 and unfortunately they sold out. Anyone selling a single ticket? [Comments Audit: 0 comments on this": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|ISO Northern California Renaissance Faire ticket for tomorrow 10/10|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Tickets for sale to NorCal Ren Faire for tomorrow (Saturday)?|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal Ren Faire ticket|I’m looking for 1 ticket to the Northern California Renaissance Faire for tomorrow Saturday October 10th. Is anyone selling? [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal Ren Faire ticket|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying One Ticket To NorCal Ren Faire|[removed] [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Anyone with extra NorCal Ren Faire Ticket?|I’m looking for 1 ticket to the Northern California Renaissance Faire in Hollister, CA for tomorrow Saturday October 10th. Does anyone have an extra ticket? [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|North Cal Renaissance Faire Sunday ticket oct 11|1 north California Renaissance (Casa De Frutas) ticket for Sunday, Oct 11. Bought an extra for Sunday and my partner isn’t going anymore. [Comments Audit: 1 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Selling 1 norcal ren faire ticket for today 10/10|My group dropped out so I have an extra ticket [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Selling 1 norcal ren faire ticket for today 10/10|[Comments Audit: 1 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Nor-cal ren faire tickets|My partner and I had plans to go to the nor-cal ren faire this weekend and have been so excited. We didn’t get tickets in advance because this is our first time going and we didn’t realize they sold out (they don’t at our local one), and we were worried he would get called": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Norcal Ren Fair Tickets Needed|Hi there! Im looking for 4 tickets to the ren fair today, 10/10. Will also take fewer. [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Norcal Ren Fair Tickets Needed|Looking for tickets to NorCal Ren Fair today! [Comments Audit: 1 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|ISO: NorCal Ren Faire Tickets|Hi there! Looking for 2 rickets to the NorCal Ren Faire today if anyone has extra tickets! [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|U/Niels_h_ scammer!|Scammed me out of 17 bucks for norcal renfaire tickets sent the payment and he claimed it didn’t go through even thought it did ! Be aware mods pls ban him. [Comments Audit: 3 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Likely Scam Alert: Confirmed NorCal Ren Faire ticket scammer callout (watch out for this username)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal ren faire tickets. Lookin for two tickets for TODAY, thanks!|[Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-10 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|ISO: 1-2 NorCal Ren Faire tickets for Sunday 10/11|Looking for tickets for the Northern California Renaissance Faire, please! [Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying 1-2 NorCal Ren Faire tickets for Sunday 10/11|Looking for tickets for the Northern California Renaissance Faire, please! [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying 2 Tickets for Norcal Ren Faire for Oct 11|Please let me know if anybody has any general admission tickets available. Thank you! [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Urgently looking for 1 10/11 NorCal REN Faire ticket!!!|Willing to purchase 1 ticket for 10/11 NorCal renfaire above the regular price if needed :)) [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Shot in the dark but does anyone have two tickets to the Norcal Renaissance Faire tomorrow|In years past I’ve bought a ticket the night before but turns out this year they’re sold out for Sunday. Definitely my fault but maybe someone out there has a ticket or two they can’t use? [Comments Audit: 0 ": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Shot in the dark but does anyone have two tickets to the Norcal Renaissance Faire tomorrow|[Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|NorCal Ren Faire URGENT!!|URGENTLY looking for a ticket to the norcal ren faire tomorrow (10/11)!! My friends have bought their tickets and i fucked up and otherwise i won’t be able to go, please help i’ll pay 😭😭😭😭 [Comments Audit: 1 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying 1 ticket to norcal ren faire tomorrow (10/11)|URGENTLY looking for a ticket to the norcal ren faire tomorrow (10/11)!! My friends have bought their tickets and i fucked up and otherwise i won’t be able to go, please help i’ll pay 😭😭😭😭 [Comments Audit: 2 comments on this Reddit post — no sell": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal Renaissance Faire 10/11 - 1 ticket|Looking for one ticket for Sunday 10/11 for Northern California Renaissance Faire! [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal Ren Faire Tickets for today|I promised my 17 year old daughter that I would take her and her friend to the Ren Faire but failed to get tickets in time. If you have a spare or two I will buy them from you. Name your price, this matters a lot to both of us! 415-572-4792 [Comments Audit:": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Buying NorCal Ren Faire Tickets for today|[Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (0 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|NorCal ren fair|Hello need 2 tickets for ren fair today! Hollister [Comments Audit: 1 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (1 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Selling Norcal Renaissance Faire ticket(10/11)|I made a post earlier trying to buy a ticket for my friend which wasn't successful so if anyone is still interested in a single ticket for today let me know! [Comments Audit: 2 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "Archived post from 2026-10-11 for a past Faire weekend (not Saturday, Oct 24) (2 comments on this Reddit post — no sellers replied)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Maryland Renaissance Festival October 18th, 2026|I have 2 tickets to the Maryland Ren fair I had plans that unfortunately fell through. I'm looking to sell them for 30(ish) dollars, but the price is negotiable. If purchased, they will be transferred through the bigtickets official website. [Comment": {
+    "is_valid": false,
+    "reason": "Wrong Renaissance Faire / city (Maryland, not NorCal Ren Faire in Hollister)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): 21 hours ago — You must purchase a ticket at. Northern California Renaissance Fa|21 hours ago — You must purchase a ticket at. Northern California Renaissance Faire to enter ... 24. 25. 26. 27. 28. 29. 30. 31. Sign Up For Our Newsletter. Email Sign up ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): 24 and 25) from 6 to 8:30 p.m. Trick-or-treat under the sea in your ... Northern|24 and 25) from 6 to 8:30 p.m. Trick-or-treat under the sea in your ... Northern California Renaissance Faire in Hollister: Weekends through Oct 25 ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Susan Polugar Unruh · 19hI worked for ages, moved around and worked whatever Faire was ne|Susan Polugar Unruh · 19hI worked for ages, moved around and worked whatever Faire was near me, then came back “home.” Haven’t been in a few years beca… See moreLikeReply": {
+    "is_valid": false,
+    "reason": "General Faire discussion or non-ticket post (does not offer event admission for sale)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Hanna Hill · 6d · AdminPeople are not allowed to sell tickets near the entranceLikeReply|Hanna Hill · 6d · AdminPeople are not allowed to sell tickets near the entranceLikeReply": {
+    "is_valid": false,
+    "reason": "General Faire rule notice (Admin reminder, not a ticket seller)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Do you guys have a preference? Sarah and isabelle|Do you guys have a preference? Sarah and isabelle Enter, Message sent 2:29 PM by Anais Ho: Do you guys have a preference? Sarah and isabelle": {
+    "is_valid": false,
+    "reason": "General Faire discussion or non-ticket post (does not offer event admission for sale)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|ISO - Looking for 1 Northern California Renaissance Faire Ticket for 10/18 (San Francisco)|Does anyone have an extra ticket for 10/18? Just looking for one so if you had someone drop out of your group please let me know! Must be willing to meet there. Thank you!": {
+    "is_valid": false,
+    "reason": "Wrong Faire date (10/18) — Not Saturday, October 24",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Renaissance Faire Costume for Male - $200 (walnut creek)|This is a professionally constructed costume made to the highest standards. It was designed and sewn by a seamstress who specializes in Renaissance costumes. She has done the Queen’s clothing for the Marin County Renaissance Faire many times.": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (clothing, costume, costumes), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Costume: Renaissance Costume Set (Rogue Character) 8 Pieces, Like NEW - $30 (berkeley)|I bought this off Amazon for the Renaissance Faire. It did its job. It's surprisingly good quality and the pieces are adjustable. Click on the link to Amazon to get more photos. You'll probably want to find a swo": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (costume, knife, sheath), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Renaissance costume hats - $20 (richmond / point / annex)|These Renaissance “flat caps” could be worn by men or women. Made by a Renaissance costume store, they are purple, 100% cotton, size medium. I have 3. Useful for a family Renaissance Faire excursion or to top a costume. $20 each or all 3 for": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (cap, caps, costume), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Premium Leather Custom-Made Bolero Jacket, Renaissance/Fantasy/Pirate - $250 (bernal heigh|Custom-made leather bolero for Renaissance Faire, elf, or pirate cosplay. Brand new, never worn. The garment is cropped to just below the bust. Made from thick, premium brown leather. No closures or lining in": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (bolero, jacket, leather), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Men’s Renaissance Faire Peasant Outfit Clothing - $45 (fairfield / vacaville)|Lightly used men’s ren faire peasant outfit/clothing. Pants, shirt, vest, stockings, sash, and head cover. $60 Also available: Women’s lambskin skirt, made in New Zealand. $25 Leather backgammon pocket travel set. $15 Loc": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (clothing, leather, outfit), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|1 Norcal Renaissance Faire (Ren Faire) Ticket 10/17 - $100 (Santa Clara)|Got one ticket $300 OBO. Feel free to text me show contact info . I live in SF.": {
+    "is_valid": false,
+    "reason": "Wrong Faire date (10/17) — Not Saturday, October 24",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|PEWTER CUP s vintage (sunnyvale)|$150 Lemil SMYTHS 85 (on the left) $100 will jones tall $80 Don Miller (on the right) hammer hammered metal vnt vintage sca ren fair faire renaissance medieval theo skl1.4 gothic dinner party guild hand made art artist silver castle decor wedding craft wine beer mug": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (cup, cups, mug), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|CANE SNAKE carved wood staff walking hiking hike (sunnyvale)|carved hardwood snake...$25 any of the 3 bent handle canes...$25 each WHISTLE CREEK hickory straight staff w leather wrist strap 54.5\" tall ...$30 tall wood designed fish walking stick...IS SOLD smooth hardwood cane w worm artwork...SOLD ": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (cane, leather), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|22” miniature decorative rapier sword with sheath - $60 (Santa Cruz)|22” miniature decorative Spanish cup-hilt rapier sword with sheath for costume or display piece, patterned after the historical 17th-century \"Tizona\" style swords. Features 2 ring holes to allow it to be attached to belt. Tip is p": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (costume, cup, rapier), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|New Princess Dress w/Wand - $99 (South Salinas)|Beautiful lavender princess dress with wand! Well made dress by Holy Clothing size L/XL for Halloween, Renaissance Faire, or an everyday Domestic Goddess. Great deal - it’s new with tags!!": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (clothing, dress, wand), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Ren faire women's gown - $200 (west marin)|This is a hand-embroidered reproduction c.1580s gown in dusty blue velveteen with maroon ribbon trim. It is roughly a women's size 12 and hemmed for someone about 5'6\" in height. The gown comes with outer garments and undergarments appropriate for obtainin": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (bodice, cloth, corset), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): Buying 1 GA ticket - NorCal Ren Faire, Saturday 10/24|Buying 1 GA ticket - NorCal Ren Faire, Saturday 10/24": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Frank Cohen|Frank Cohen · 1w · Author I rented a car and will be driving down starting around 9:30 Saturday from San Mateo. Glad to give a lift to anybody that needs one. Reply": {
+    "is_valid": false,
+    "reason": "General Faire discussion or non-ticket post (does not offer event admission for sale)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|10/24 NorCal Renaissance faire tickets|Looking for seven (7) tickets for Saturday October 24th’s NorCal Renaissance Faire. It’s my fiancé’s birthday and we only purchased half of the tickets for the group before they sold out. We have a van already arranged to make the drive so please save this bir": {
+    "is_valid": false,
+    "reason": "Buyer 'ISO / Looking to Buy' post (not a seller) — 0 seller comments found on this post",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Renaissance faire sword - $15 (Merced)|Excalibur": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (sword), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Elizabeth Gill|Elizabeth Gill · 1w Are they adult and children's clothes? Reply Share": {
+    "is_valid": false,
+    "reason": "General Faire discussion or non-ticket post (does not offer event admission for sale)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|People are not allowed to sell tickets near the entrance|Hanna Hill · 6d · Admin People are not allowed to sell tickets near the entrance Reply": {
+    "is_valid": false,
+    "reason": "General Faire rule notice (Admin reminder, not a ticket seller)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Gwennifer Held|Gwennifer Held · 6d The high on Saturday is supposed to be 95. Bring an empty refillable water bottle. There is a free water station next to the A… See more Reply": {
+    "is_valid": false,
+    "reason": "General Faire discussion or non-ticket post (does not offer event admission for sale)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|2 LARGE huge TANKARDS...ren faire - $25 (sunnyvale)|Have the largest drinking cup at the fair...$25 cash each 1 open top copper color...one closing top silver...see all pics. cup cups decor decoration mug mugs beer ale mead renaissance fair faire sca drink drinking belt dress loth cloths clothing b": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (clothing, cloths, cup), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Looking for two (2) Renaissance Faire tickets for Saturday October 24|willing to purchase your extra tickets!": {
+    "is_valid": false,
+    "reason": "Buyer 'ISO / Looking to Buy' post (not a seller) — 0 seller comments found on this post",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|REN FAIRE CLOTHS kids size top shirt and vest - $30 (sunnyvale)|small shirt and an over period vest...$30 ren faire fair medieval cloth cloths clothing wear pleasure theo not ticket sca guild english scottish irish german chivalry store halloween costume": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (cloth, clothing, cloths), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|New Princess Dress w/Wand - $120 (South Salinas)|Beautiful lavender princess dress with wand! Well made dress by Holy Clothing size L/XL for Halloween, Renaissance Faire, or an everyday Domestic Goddess. Great deal - it’s new with tags!!": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (clothing, dress, wand), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Purple dress woth designs - $20 (Salinas)|Cute vintage dress in good condition, size 7/8. This unique dress is perfect for a Renaissance fair, costume event, themed party, or anyone who loves vintage style. It’s been well cared for and is ready for a new home!": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (costume, dress), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|***Renaissance fair tickets in vegas** - $45 (Sacramento)|4 tickets for the Renaissance fair in vegas from 9th-11th.": {
+    "is_valid": false,
+    "reason": "Wrong Renaissance Faire / city (Vegas, not NorCal Ren Faire in Hollister)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Age of Craft Milan Gauntlets - 15th Century - tempered spring steel - $375 (concord / plea|Up for sale is a pair of Age of Craft Milan Gauntlets, tempered spring steel with suede sewn-in gloves. I purchased them a few years back for $540 without tax and shipping and they took a while to be shipped ": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (buhurt, gauntlets, steel), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Steel Mastery Churburg Breastplate - 14th Century -XL - $300 (concord / pleasant hill / ma|Up for sale is a used Steel Mastery Churburg Type 14th Century breastplate. It is a very thick mild steel. A bit of an older model. No fancy options, no frills. Originally bought for HEMA, but I wanted to go ": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (breastplate, buhurt, hema), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Costumes: Ren Faire, Avatar/Kyoshi, etc - $200 (fremont / union city / newark)|My wife is looking to rehome some of the costumes she no longer wears. $200 - Kyoshi Warrior Dress & Armor (Size 2-4) $20 - White Faire Undershirt $20 - Grey Faire Shirt": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (armor, costumes, dress), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Looking for 2 Ren Faire tickets for 10/18 (oakland hills / mills)|Hello, I’m looking for 2 Ren Faire tickets for today 10/18. Thanks so much!": {
+    "is_valid": false,
+    "reason": "Wrong Faire date (10/18) — Not Saturday, October 24",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|BMW Trunk Lid Tray Tool Kit. Vintage. - $350|Vintage BMW trunk lid tool kit. Tools and tray are in great condition. Very rare in this condition. Located in Hollister, but can meet in Morgan Hill, Gilroy, San Juan Bautista or Casa De Fruta. $350.00 cash only. No trades.": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (tool kit, trunk lid), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Ren Faire Helmet - Viking Horns - $500 (Montecito)|Original steel helmet with horns - Viking Ren Faire Lord of the Rings Adult size": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (helmet, steel), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Knifes and Axes - $380 (Redding)|$100 for the large axe $50 for small axe it does have a little rust in it but it is damascus steel $50 black tactical knife $30 dragon knife $100 large damascus steel knife $50 small damascus steel knife One of the Damascus knives were made by forged in fire champio": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (axe, axes, knife), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Wench costume- RenFaire, Halloween, etc. - $50|Three-piece costume. Purchased at Ren Faire in CA. Includes blouse, skirt and bustier. Adjustable size, probably M-XL": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (costume, skirt), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): 22 hours ago — You must purchase a ticket at. Northern California Renaissance Fa|22 hours ago — You must purchase a ticket at. Northern California Renaissance Faire to enter ... 24. 25. 26. 27. 28. 29. 30. 31. Sign Up For Our Newsletter. Email Sign up ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "SOLD|[SOLD] Selling 2 Tix + Parking to NorCal RenFaire 10/24|Seller: mleoa 6 d ago (Seller appears on 1 date section(s) on VouchFirst)": {
+    "is_valid": false,
+    "reason": "Already marked SOLD on platform",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "SOLD|[SOLD] Selling 1 NorCal Renaissance Faire 2026 Ticket – Hollister, CA|Seller: Emoney107 7 d ago (Seller appears on 4 date section(s) on VouchFirst)": {
+    "is_valid": false,
+    "reason": "Already marked SOLD on platform",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): The Northern California Renaissance Faire is at Casa de Fruta ... 10/24 & Sun. 1|The Northern California Renaissance Faire is at Casa de Fruta ... 10/24 & Sun. 10/25 from 10AM-6PM is almost ...": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): Buying one NorCal ren faire ticket 10/24 : r/TicketResale ...|Buying one NorCal ren faire ticket 10/24 : r/TicketResale ...": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): Facebook · The Northern California Renaissance Faire 2026 | Tickets Buy, Sell & |Facebook · The Northern California Renaissance Faire 2026 | Tickets Buy, Sell & Trade": {
+    "is_valid": false,
+    "reason": "Likely Scam: Dedicated 'Tickets Buy, Sell & Trade' / 'GROUP ADMIN HERE' Facebook group (known fake-admin deposit scam)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): BUYING 2 NORCAL REN FAIR TICKETS 10/24. USA. I'm looking for 2 NorCal Ren Fair .|BUYING 2 NORCAL REN FAIR TICKETS 10/24. USA. I'm looking for 2 NorCal Ren Fair ... facebook group real ticket? r/MCRtourtickets - facebook group real ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): Buying NorCal Ren Faire 10/24 tickets : r/TicketResale ...|Buying NorCal Ren Faire 10/24 tickets : r/TicketResale ...": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): GROUP ADMIN HERE RENAISSANCE FAIRE 2026|GROUP ADMIN HERE RENAISSANCE FAIRE 2026": {
+    "is_valid": false,
+    "reason": "Likely Scam: Dedicated 'Tickets Buy, Sell & Trade' / 'GROUP ADMIN HERE' Facebook group (known fake-admin deposit scam)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): ... Northern California Renaissance Faire, Yhe Final weekend of Ren Faire Octobe|... Northern California Renaissance Faire, Yhe Final weekend of Ren Faire October 24 ... ticket for ONLY $30.00! (Reg. Price $42.00) Kids ...Read more": {
+    "is_valid": false,
+    "reason": "Likely Scam: Suspicious below-face-value ad ('ticket for ONLY $30.00!' with typos for sold-out Oct 24)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): Join us for the final weekend at The Northern California Renaissance Faire, pres|Join us for the final weekend at The Northern California Renaissance Faire, presented by Play Faire Productions at Casa de Fruta in Hollister! Fairies and ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Google Live Web Search (Past 24h): 23 hours ago — You must purchase a ticket at. Northern California Renaissance Fa|23 hours ago — You must purchase a ticket at. Northern California Renaissance Faire to enter ... 24. 25. 26. 27. 28. 29. 30. 31. Sign Up For Our Newsletter. Email Sign up ...Read more": {
+    "is_valid": false,
+    "reason": "Google search index snippet (not a direct seller post)",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Nextdoor (For Sale & Free - Faire): Costume: Renaissance Costume Set (Rogue Character) 8 Pieces, Like NEW - $25|Costume: Renaissance Costume Set (Rogue Character) 8 Pieces, Like NEW - $25": {
+    "is_valid": false,
+    "reason": "Selling physical costume / armor / item (costume), not event admission",
+    "evaluated_by": "agent_holistic_audit"
+  },
+  "|Any updates on if Northern California ren fair will have more tickets available for tomorrow 10/10? Is it worth to go and see i can get in?|[Comments Audit: 0 comments on this Reddit post — no sellers replied]": {
+    "is_valid": false,
+    "reason": "The post is a buyer request asking about tickets for the Northern California Renaissance Faire on Saturday, October 10, 2026, not the targeted date of October 24, 2026. It is therefore not a seller posting for Oct 24 tickets.",
+    "evaluated_by": "llm"
+  },
+  "|Steel Mastery Churburg Breastplate - 14th Century -XL - $300 (concord / pleasant hill / martinez)|Up for sale is a used Steel Mastery Churburg Type 14th Century breastplate. It is a very thick mild steel. A bit of an older model. No fancy options, no frills. Originally bought for HEMA, but I wanted": {
+    "is_valid": false,
+    "reason": "Selling a physical item (steel breastplate, gauntlets); not admission tickets for the Northern California Renaissance Faire. 0 comments on this post — no sellers replied.",
+    "evaluated_by": "llm"
+  },
+  "|Age of Craft Milan Gauntlets - 15th Century - tempered spring steel - $375 (concord / pleasant hill / martinez)|Up for sale is a pair of Age of Craft Milan Gauntlets, tempered spring steel with suede sewn-in gloves. I purchased them a few years back for $540 without tax and shipping and they took a": {
+    "is_valid": false,
+    "reason": "The post is offering a pair of 15th‑century gauntlets, a physical item for sale, not admission tickets for the Northern California Renaissance Faire. It clearly falls under the physical item category and is not a ticket seller.",
+    "evaluated_by": "llm"
+  },
+  "|The Northern California Renaissance Faire is at Casa de Fruta.|": {
+    "is_valid": false,
+    "reason": "The post does not mention any tickets for sale. It simply states that the Northern California Renaissance Faire is at Casa de Fruta, so it is not a seller listing for tickets.",
+    "evaluated_by": "llm"
+  },
+  "|BUYING 2 NORCAL REN FAIR TICKETS 10/24 - Reddit|": {
+    "is_valid": false,
+    "reason": "The post is an asking thread titled \"BUYING 2 NORCAL REN FAIR TICKETS 10/24 - Reddit\" and the body contains no mention of selling tickets. This indicates the author is looking to purchase tickets, not offer them for sale. Therefore it does not qualify as a ticket seller for Saturday, October 24, 2026.",
+    "evaluated_by": "llm"
+  },
+  "|Elizabeth Gill| · 1w Are they adult and children's clothes? Reply Share [Comments Audit: 0 comments on this post so far]": {
+    "is_valid": false,
+    "reason": "Irrelevant: The post is asking about adult and children's clothes, not about selling or buying event tickets.",
+    "evaluated_by": "llm"
+  },
+  "2026-10-09|Reddit Comment (r/Tickets)||Selling one NorCal ren faire ticket for sat 10/10! |": {
+    "is_valid": false,
+    "reason": "Irrelevant: Wrong Faire date / past weekend: listing for Sat 10/10 instead of 10/24",
+    "evaluated_by": "llm"
+  },
+  "|Google Live Web Search (Past 24h)||URL: https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+%22ticket%22+%2224%22&tbs=qdr:d&sei=SEXZaoapKNGnkPIPqvql6Qg|": {
+    "is_valid": false,
+    "reason": "Irrelevant: Search link, not offering tickets.",
+    "evaluated_by": "llm"
+  }
+}
