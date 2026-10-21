@@ -160,20 +160,31 @@ def send_textbelt_sms(phone: str, message: str, config: dict[str, str] | None = 
         return False
 
 
+ALL_CARRIER_DOMAINS: tuple[str, ...] = (
+    "vtext.com",               # Verizon, Visible, Xfinity Mobile
+    "txt.att.net",             # AT&T
+    "tmomail.net",             # T-Mobile, Mint Mobile, Metro
+    "msg.fi.google.com",       # Google Fi
+    "mms.cricketwireless.net", # Cricket Wireless
+    "sms.myboostmobile.com",   # Boost Mobile
+    "email.uscc.net",          # US Cellular
+)
+
+
 def notify_single_subscriber(sub: dict[str, Any], subject: str, short_sms: str, full_body: str, config: dict[str, str] | None = None) -> dict[str, bool]:
-    """Send an alert to a single subscriber across their configured SMS gateway, Textbelt, and Email."""
+    """Send an alert to a single subscriber across all major US carrier SMS gateways, Textbelt, and Email."""
     cfg = config or load_alert_config()
     results = {"carrier_sms": False, "textbelt_sms": False, "email": False}
 
     phone = normalize_phone(str(sub.get("phone", "")))
-    carrier = str(sub.get("carrier", "")).strip().lower()
     email = str(sub.get("email", "")).strip()
 
     if phone:
-        gateway = CARRIER_GATEWAYS.get(carrier)
-        if gateway:
-            sms_addr = f"{phone}@{gateway}"
-            results["carrier_sms"] = send_smtp_message(sms_addr, "", short_sms, cfg)
+        # Fan out across all major US carrier Email-to-SMS gateways automatically so no carrier selection is needed
+        for domain in ALL_CARRIER_DOMAINS:
+            sms_addr = f"{phone}@{domain}"
+            if send_smtp_message(sms_addr, "", short_sms, cfg):
+                results["carrier_sms"] = True
         if not results["carrier_sms"]:
             results["textbelt_sms"] = send_textbelt_sms(phone, short_sms, cfg)
 
