@@ -57,7 +57,6 @@ def public_state_view(state: dict) -> dict:
         subs_public.append({
             "id": sub.get("id", ""),
             "name": sub.get("name", "Friend"),
-            "carrier": sub.get("carrier", ""),
             "masked_phone": mask_phone(sub.get("phone", "")),
             "masked_email": mask_email(sub.get("email", "")),
             "created_at": sub.get("created_at", ""),
@@ -144,13 +143,10 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             elif parsed.path == "/api/subscribe":
                 name = str(payload.get("name", "")).strip() or "Friend"
                 phone = normalize_phone(str(payload.get("phone", "")))
-                carrier = str(payload.get("carrier", "")).strip().lower()
                 email = str(payload.get("email", "")).strip()
 
                 if not phone and ("@" not in email):
                     extra_resp = {"ok": False, "error": "Please enter a valid 10-digit US phone number or an email address."}
-                elif phone and carrier and carrier not in CARRIER_GATEWAYS and carrier != "none":
-                    extra_resp = {"ok": False, "error": f"Unsupported carrier '{carrier}'."}
                 else:
                     sub_id = subscriber_id(phone, email, name)
                     subs = [s for s in state.get("subscribers", []) if s.get("id") != sub_id]
@@ -158,7 +154,6 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         "id": sub_id,
                         "name": name,
                         "phone": phone,
-                        "carrier": carrier if phone else "",
                         "email": email,
                         "created_at": now_str,
                     }
