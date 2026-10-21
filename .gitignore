@@ -1,0 +1,7 @@
+# Never commit browser session cookies or virtual environments
+.antigravity_chrome_profile/
+.venv/
+__pycache__/
+*.pyc
+cloudflared.exe
+*.log
