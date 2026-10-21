@@ -224,6 +224,37 @@ class TestRenFaireTicketScout(unittest.TestCase):
         self.assertEqual(r.extract_price("Selling for 45 bucks each"), 45.0)
         self.assertIsNone(r.extract_price("Only $3 water"))
 
+    def test_ticket_alerts_and_privacy_masking(self) -> None:
+        import ticket_alerts as ta
+        import dashboard_server as ds
+
+        self.assertEqual(ta.normalize_phone("1 (415) 555-9876"), "4155559876")
+        self.assertEqual(ta.normalize_phone("123"), "")
+        self.assertEqual(ta.mask_phone("415-555-9876"), "(•••) •••-9876")
+        self.assertEqual(ta.mask_email("alex@gmail.com"), "a•••x@gmail.com")
+
+        raw_state = {
+            "claims": {},
+            "reports": {},
+            "manual_leads": [],
+            "subscribers": [
+                {
+                    "id": ta.subscriber_id("4155559876", "alex@gmail.com", "Alex"),
+                    "name": "Alex",
+                    "phone": "4155559876",
+                    "carrier": "verizon",
+                    "email": "alex@gmail.com",
+                    "created_at": "4:30 PM",
+                }
+            ],
+        }
+        pub = ds.public_state_view(raw_state)
+        sub_pub = pub["subscribers"][0]
+        self.assertEqual(sub_pub["masked_phone"], "(•••) •••-9876")
+        self.assertEqual(sub_pub["masked_email"], "a•••x@gmail.com")
+        self.assertNotIn("phone", sub_pub)
+        self.assertNotIn("email", sub_pub)
+
 
 if __name__ == "__main__":
     unittest.main()
