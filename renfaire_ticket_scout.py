@@ -1600,25 +1600,26 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
         background: var(--bg); color: var(--text);
     }}
     .header {{
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;
         background: var(--card); border: 1px solid var(--border);
-        padding: 20px 24px; border-radius: 14px; margin-bottom: 20px;
+        padding: 14px 20px; border-radius: 14px; margin-bottom: 12px;
     }}
-    .title-area h1 {{ margin: 0 0 6px 0; font-size: 22px; }}
-    .title-area p {{ margin: 0; color: var(--muted); font-size: 14px; }}
+    .title-area {{ flex: 1; min-width: 300px; }}
+    .title-area h1 {{ margin: 0 0 4px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }}
+    .title-area p {{ margin: 0; color: var(--muted); font-size: 12.5px; }}
     .status-pill {{
         background: rgba(16, 185, 129, 0.15); border: 1px solid var(--green);
-        color: #34d399; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+        color: #34d399; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
     }}
     .stats {{
-        display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px;
     }}
     .stat-card {{
         background: var(--card); border: 1px solid var(--border);
-        padding: 16px 20px; border-radius: 12px;
+        padding: 10px 16px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
     }}
-    .stat-label {{ color: var(--muted); font-size: 13px; margin-bottom: 6px; }}
-    .stat-val {{ font-size: 28px; font-weight: 700; }}
+    .stat-label {{ color: var(--muted); font-size: 12.5px; }}
+    .stat-val {{ font-size: 22px; font-weight: 700; }}
     table {{
         width: 100%; border-collapse: collapse; background: var(--card);
         border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
@@ -1679,90 +1680,90 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
         background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444;
         color: #fecaca; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-top: 6px;
     }}
-    .alert-bar {{
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
-        border: 1px solid #3b82f6; border-radius: 14px; padding: 16px 22px; margin-bottom: 20px;
-        display: flex; flex-direction: column; gap: 12px;
+    .alert-side {{
+        background: rgba(15, 23, 42, 0.75); border: 1px solid #334155;
+        border-radius: 10px; padding: 10px 14px; width: 430px; max-width: 100%;
+        display: flex; flex-direction: column; gap: 6px;
     }}
     .alert-top {{
-        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+        display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }}
     .alert-form {{
-        display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+        display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
     }}
-    .alert-input, .alert-select {{
+    .alert-input {{
         background: #0f172a; border: 1px solid var(--border); color: var(--text);
-        padding: 8px 11px; border-radius: 8px; font-size: 13px;
+        padding: 5px 8px; border-radius: 6px; font-size: 12px;
     }}
-    .alert-input:focus, .alert-select:focus {{ outline: none; border-color: #60a5fa; }}
+    .alert-input:focus {{ outline: none; border-color: #60a5fa; }}
     .btn-sub {{
         cursor: pointer; background: #2563eb; color: #ffffff; border: 1px solid #3b82f6;
-        padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: 0.15s;
+        padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; transition: 0.15s; white-space: nowrap;
     }}
     .btn-sub:hover {{ background: #1d4ed8; }}
     .btn-push {{
-        cursor: pointer; background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid #059669;
-        padding: 7px 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; text-decoration: none;
-        display: inline-block; transition: 0.15s;
+        cursor: pointer; background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid #059669;
+        padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none;
+        display: inline-block; transition: 0.15s; white-space: nowrap;
     }}
     .btn-push:hover {{ background: rgba(16, 185, 129, 0.28); }}
     .sub-pill {{
-        display: inline-flex; align-items: center; gap: 6px;
-        background: rgba(59, 130, 246, 0.16); border: 1px solid #334155;
-        color: #cbd5e1; padding: 3px 9px; border-radius: 999px; font-size: 12px; margin-right: 6px; margin-top: 4px;
+        display: inline-flex; align-items: center; gap: 4px;
+        background: rgba(59, 130, 246, 0.14); border: 1px solid #334155;
+        color: #cbd5e1; padding: 2px 7px; border-radius: 999px; font-size: 11px; margin-right: 4px; margin-top: 2px;
     }}
     .sub-del {{
-        cursor: pointer; color: #f87171; font-weight: 700; border: none; background: none; padding: 0 2px; font-size: 12px;
+        cursor: pointer; color: #f87171; font-weight: 700; border: none; background: none; padding: 0 2px; font-size: 11px;
     }}
 </style>
 </head>
 <body>
     <div class="header">
         <div class="title-area">
-            <h1>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout & Scam Auditor</h1>
+            <h1>
+                <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
+                <span class="status-pill">● Live | Last Sweep: {last_scan_str}</span>
+            </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
-            <p style="margin-top:6px; font-size:12px; color:#93c5fd;">🔎 <b>Active Search Vocabulary:</b> {html.escape(active_terms_str)} &nbsp;|&nbsp; 🧠 <b>Auto-Learned from Posts:</b> {html.escape(learned_str)}</p>
-            <p style="margin-top:4px; font-size:12px; color:#a7f3d0;">🔗 <b>Permanent Partiful Link:</b> <a href="https://slizha99.github.io/renfaire-ticket-scout/" target="_blank" style="color:#34d399; font-weight:600;">https://slizha99.github.io/renfaire-ticket-scout/</a></p>
+            <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> {html.escape(active_terms_str)} &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> {html.escape(learned_str)}</p>
         </div>
-        <div class="status-pill">● Live Shared Board (Auto-syncs) | Last Sweep: {last_scan_str}</div>
-    </div>
 
-    <div class="alert-bar">
-        <div class="alert-top">
-            <div>
-                <div style="font-size:15px; font-weight:700; color:#f8fafc;">🔔 Get Free Instant Ticket Alerts (SMS / Email / Push)</div>
-                <div class="sub" style="margin-top:2px;">Sign up to get pinged the moment a new Low or Medium Risk Saturday, Oct 24 ticket seller post is found.</div>
+        <div class="alert-side">
+            <div class="alert-top">
+                <span style="font-size:12.5px; font-weight:700; color:#f8fafc;">🔔 Instant New-Listing Alerts</span>
+                <div style="display:flex; gap:5px;">
+                    <a href="https://ntfy.sh/norcal_renfaire_oct24_tickets" target="_blank" class="btn-push" title="Open mobile push feed">📱 Push Feed</a>
+                    <button type="button" class="btn-push" id="btnBrowserPush" onclick="enableBrowserNotifications()">🔊 Sound Alert</button>
+                </div>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <a href="https://ntfy.sh/norcal_renfaire_oct24_tickets" target="_blank" class="btn-push">📱 1-Tap Mobile Push Feed (ntfy) ↗</a>
-                <button type="button" class="btn-push" id="btnBrowserPush" onclick="enableBrowserNotifications()">🔊 Enable Browser Push & Sound</button>
+            <form class="alert-form" onsubmit="subscribeAlerts(event)">
+                <input type="text" id="subName" class="alert-input" placeholder="Name" style="width:78px;" required>
+                <input type="tel" id="subPhone" class="alert-input" placeholder="Phone #" style="width:105px;">
+                <input type="email" id="subEmail" class="alert-input" placeholder="or Email" style="width:125px;">
+                <button type="submit" class="btn-sub">📲 Sign Up</button>
+            </form>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                <div id="subscribersListBox" class="sub" style="font-size:11px;"></div>
+                <span id="subMsg" class="sub" style="font-size:11px;"></span>
             </div>
         </div>
-        <form class="alert-form" onsubmit="subscribeAlerts(event)">
-            <input type="text" id="subName" class="alert-input" placeholder="Your Name" style="width:140px;" required>
-            <input type="tel" id="subPhone" class="alert-input" placeholder="10-Digit Phone # (optional)" style="width:190px;">
-            <input type="email" id="subEmail" class="alert-input" placeholder="Email Address (optional)" style="width:220px;">
-            <button type="submit" class="btn-sub">📲 Subscribe to Free Alerts</button>
-            <span id="subMsg" class="sub" style="margin-left:6px;"></span>
-        </form>
-        <div id="subscribersListBox" class="sub"></div>
     </div>
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-label">Sat Oct 24 Seller Leads ( excl. {len(sorted_items) - len(visible_items)} irrelevant posts )</div>
+            <div class="stat-label">Sat Oct 24 Leads (excl. {len(sorted_items) - len(visible_items)} irrelevant)</div>
             <div class="stat-val">{len(visible_items)}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label" style="color:#34d399;">Low Risk (&lt;35% Scam Score)</div>
+            <div class="stat-label" style="color:#34d399;">Low Risk (&lt;35%)</div>
             <div class="stat-val" style="color:#34d399;">{low_count}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label" style="color:#fbbf24;">Medium Risk (35–59% Score)</div>
+            <div class="stat-label" style="color:#fbbf24;">Medium Risk (35–59%)</div>
             <div class="stat-val" style="color:#fbbf24;">{med_count}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label" style="color:#f87171;">Filtered Out as Likely Scam (60%+)</div>
+            <div class="stat-label" style="color:#f87171;">Filtered Likely Scams (60%+)</div>
             <div class="stat-val" style="color:#f87171;">{high_count}</div>
         </div>
     </div>
@@ -1910,11 +1911,11 @@ async function syncTeamState() {{
         const subBox = document.getElementById('subscribersListBox');
         if (subBox) {{
             if (subs.length === 0) {{
-                subBox.innerHTML = '👥 No SMS/Email subscribers yet — be the first to sign up above!';
+                subBox.innerHTML = '👥 0 signed up for alerts';
             }} else {{
-                subBox.innerHTML = '👥 <b>Active Alert Subscribers (' + subs.length + '):</b> ' + subs.map(s => {{
+                subBox.innerHTML = '👥 <b>' + subs.length + ' signed up:</b> ' + subs.map(s => {{
                     const contact = [s.masked_phone || '', s.masked_email || ''].filter(Boolean).join(' / ');
-                    return `<span class="sub-pill">📲 <b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
+                    return `<span class="sub-pill"><b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
                 }}).join('');
             }}
         }}
