@@ -143,7 +143,7 @@
         <div class="title-area">
             <h1>
                 <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
-                <span class="status-pill">● Live | Last Sweep: 11:15:29 AM (Scanned FB Global Search (Northern CA Renaissance Faire)...)</span>
+                <span class="status-pill">● Live | Last Sweep: Just Updated</span>
             </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot;</p>
@@ -172,7 +172,7 @@
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-label">Sat Oct 24 Leads (excl. 351 irrelevant)</div>
+            <div class="stat-label">Sat Oct 24 Leads (excl. 353 irrelevant)</div>
             <div class="stat-val">34</div>
         </div>
         <div class="stat-card">
@@ -1449,7 +1449,7 @@ Write a public commen</div>
 
 <script>
 let isDialogOpen = false;
-let API_BASE = window.location.hostname.endsWith('github.io') ? 'https://mesa-almost-window-pairs.trycloudflare.com' : '';
+let API_BASE = window.location.hostname.endsWith('github.io') ? '' : '';
 let CURRENT_STATE = {"claims": {"vf-oct24-Stephieecee-I can sell you Northern C": {"name": "Akash Samant", "status": "Messaging Seller", "updated_at": "04:50 PM"}, "vf-oct24-Vini-vidi-Selling 1 general admissi": {"name": "Sarah", "status": "Messaged, No Response", "updated_at": "11:47 PM"}, "fb-grp-918786f51a5b": {"name": "Eamon", "status": "Messaging Seller", "updated_at": "09:17 AM"}}, "reports": {"fb-grp-77cc5e5d52a7": [{"reporter": "Sarah", "reason": "Refused PayPal G&S", "time": "11:46 PM"}], "fb-grp-d165451dd3ea": [{"reporter": "Isabella", "reason": "Repeated posts from different regions today", "time": "11:57 PM"}], "fb-grp-918786f51a5b": [{"reporter": "Eamon", "reason": "Fake screenshot, VOIP number", "time": "09:23 AM"}], "web-7bd77903aecb": [{"reporter": "Eamon", "reason": "Sent fake screenshot and were mean", "time": "10:36 AM"}]}, "manual_leads": [], "subscribers": [{"id": "04e001e165", "name": "Sarah", "masked_phone": "(\u2022\u2022\u2022) \u2022\u2022\u2022-6434", "masked_email": "", "created_at": "11:47 PM"}]};
 
 function esc(s) {
@@ -1531,63 +1531,33 @@ function renderTeamState(state) {
     });
 }
 
+const CLOUD_STATE_TOPIC = 'https://ntfy.sh/norcal_renfaire_oct24_team_state_v1';
+
 async function ensureApiBase() {
-    if (!window.location.hostname.endsWith('github.io')) return '';
-    if (API_BASE) return API_BASE;
+    return API_BASE || '';
+}
+
+async function publishCloudState(stateObj) {
     try {
-        const r = await fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_v2/json?poll=1&t=' + Date.now());
-        const t = await r.text();
-        const lines = t.trim().split(/\r?\n/).filter(Boolean);
-        for (let i = lines.length - 1; i >= 0; i--) {
-            try {
-                const obj = JSON.parse(lines[i]);
-                if (obj && obj.message && obj.message.startsWith('https://')) {
-                    API_BASE = obj.message.replace(/\/+$/, '');
-                    return API_BASE;
-                }
-            } catch (e) {}
-        }
+        await fetch(CLOUD_STATE_TOPIC, {
+            method: 'POST',
+            body: JSON.stringify(stateObj)
+        });
     } catch (e) {}
-    return API_BASE;
 }
 
 async function checkLiveTunnelFromGitHubPages() {
-    if (!window.location.hostname.endsWith('github.io')) return;
+    if (!API_BASE) return;
     try {
-        const tunnelUrl = await ensureApiBase();
-        if (!tunnelUrl) return;
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 2500);
-        const ping = await fetch(tunnelUrl + '/api/state?t=' + Date.now(), { signal: ctrl.signal });
+        const ping = await fetch(API_BASE + '/api/state?t=' + Date.now(), { signal: ctrl.signal });
         clearTimeout(timer);
         if (ping.ok) {
             const state = await ping.json();
             renderTeamState(state);
-            const htmlRes = await fetch(tunnelUrl + '/dashboard.html?t=' + Date.now());
-            if (htmlRes.ok) {
-                const htmlText = await htmlRes.text();
-                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-                const newStats = doc.querySelector('.stats');
-                const newTbody = doc.querySelector('table tbody');
-                const newPill = doc.querySelector('.status-pill');
-                if (newStats && document.querySelector('.stats')) {
-                    document.querySelector('.stats').innerHTML = newStats.innerHTML;
-                }
-                if (newTbody && document.querySelector('table tbody')) {
-                    document.querySelector('table tbody').innerHTML = newTbody.innerHTML;
-                }
-                if (newPill && document.querySelector('.status-pill')) {
-                    document.querySelector('.status-pill').textContent = newPill.textContent;
-                }
-                renderTeamState(state);
-            }
         }
-    } catch (e) {
-        const pill = document.querySelector('.status-pill');
-        if (pill && !pill.textContent.includes('Saved Snapshot')) {
-            pill.textContent = '● Saved Snapshot (Auto-Syncs When Scanner Sweep Completes)';
-        }
-    }
+    } catch (e) {}
 }
 
 function playTicketChime() {
@@ -1670,55 +1640,79 @@ async function subscribeAlerts(ev) {
     msgEl.style.color = '#93c5fd';
     msgEl.textContent = 'Subscribing...';
     try {
-        await ensureApiBase();
-        const res = await fetch(API_BASE + '/api/subscribe', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name, phone, email})
-        });
-        const data = await res.json();
-        if (!data.ok) {
-            msgEl.style.color = '#f87171';
-            msgEl.textContent = data.error || 'Could not subscribe.';
-        } else {
-            msgEl.style.color = '#34d399';
-            msgEl.textContent = '✅ Subscribed to instant ticket alerts!';
-            document.getElementById('subPhone').value = '';
-            document.getElementById('subEmail').value = '';
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/subscribe', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, phone, email})
+            });
+            const data = await res.json();
             if (data.state) renderTeamState(data.state);
-            syncTeamState();
+        } else {
+            const digits = phone.replace(/\D/g, '');
+            const mPhone = digits.length >= 4 ? ('***-***-' + digits.slice(-4)) : '';
+            const mEmail = email.includes('@') ? (email[0] + '***@' + email.split('@')[1]) : '';
+            const subId = 'sub-' + Math.random().toString(36).slice(2, 10);
+            CURRENT_STATE.subscribers = CURRENT_STATE.subscribers || [];
+            CURRENT_STATE.subscribers.push({ id: subId, name: name || 'Friend', masked_phone: mPhone, masked_email: mEmail, raw_phone: digits, raw_email: email });
+            renderTeamState(CURRENT_STATE);
+            await publishCloudState(CURRENT_STATE);
         }
+        msgEl.style.color = '#34d399';
+        msgEl.textContent = '✅ Subscribed to instant ticket alerts!';
+        document.getElementById('subPhone').value = '';
+        document.getElementById('subEmail').value = '';
     } catch (e) {
         msgEl.style.color = '#f87171';
-        msgEl.textContent = 'Host PC is currently asleep — try again in a few minutes.';
+        msgEl.textContent = 'Could not subscribe — please try again.';
     }
 }
 
 async function unsubscribeAlert(id) {
     if (!confirm('Remove this alert subscription?')) return;
-    await ensureApiBase();
-    const res = await fetch(API_BASE + '/api/unsubscribe', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id})
-    });
-    try {
-        const data = await res.json();
-        if (data.state) renderTeamState(data.state);
-    } catch (e) {}
-    syncTeamState();
+    CURRENT_STATE.subscribers = (CURRENT_STATE.subscribers || []).filter(s => s.id !== id);
+    renderTeamState(CURRENT_STATE);
+    if (API_BASE) {
+        try {
+            const res = await fetch(API_BASE + '/api/unsubscribe', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id})
+            });
+            const data = await res.json();
+            if (data.state) renderTeamState(data.state);
+        } catch (e) {}
+    } else {
+        await publishCloudState(CURRENT_STATE);
+    }
 }
 
 async function syncTeamState() {
     try {
-        if (window.location.hostname.endsWith('github.io') && !API_BASE) {
-            await ensureApiBase();
-            if (!API_BASE) return;
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/state?t=' + Date.now());
+            if (res.ok) {
+                const state = await res.json();
+                renderTeamState(state);
+                return;
+            }
         }
-        const res = await fetch(API_BASE + '/api/state?t=' + Date.now());
-        if (!res.ok) return;
-        const state = await res.json();
-        renderTeamState(state);
+        const r = await fetch(CLOUD_STATE_TOPIC + '/json?poll=1&t=' + Date.now());
+        if (!r.ok) return;
+        const t = await r.text();
+        const lines = t.trim().split(/\r?\n/).filter(Boolean);
+        for (let i = lines.length - 1; i >= 0; i--) {
+            try {
+                const env = JSON.parse(lines[i]);
+                if (env && env.message && env.message.startsWith('{')) {
+                    const st = JSON.parse(env.message);
+                    if (st && (st.claims || st.reports || st.subscribers)) {
+                        renderTeamState(st);
+                        break;
+                    }
+                }
+            } catch (e) {}
+        }
     } catch (e) {}
 }
 
@@ -1734,24 +1728,27 @@ async function claimListing(id) {
         if (name.trim()) {
             status = prompt("Status (e.g., 'Messaging Seller', 'Verifying', 'Bought Tickets!'):", "Messaging Seller") || "Messaging Seller";
         }
-        // Instant optimistic UI update
+        const nowStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
         CURRENT_STATE.claims = CURRENT_STATE.claims || {};
         if (!name.trim()) {
             delete CURRENT_STATE.claims[cleanId];
         } else {
-            CURRENT_STATE.claims[cleanId] = { name: name.trim(), status, updated_at: 'Just now' };
+            CURRENT_STATE.claims[cleanId] = { name: name.trim(), status, updated_at: nowStr };
         }
         renderTeamState(CURRENT_STATE);
 
-        await ensureApiBase();
-        const res = await fetch(API_BASE + '/api/claim', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: cleanId, name: name.trim(), status})
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (data.state) renderTeamState(data.state);
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/claim', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: cleanId, name: name.trim(), status})
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.state) renderTeamState(data.state);
+            }
+        } else {
+            await publishCloudState(CURRENT_STATE);
         }
     } catch (e) {} finally {
         isDialogOpen = false;
@@ -1767,21 +1764,24 @@ async function reportListing(id) {
         if (name.trim()) localStorage.setItem('renfaire_user_name', name.trim());
         const reason = prompt("Why is this seller suspicious? (e.g., 'Refused PayPal G&S', 'Sent fake screenshot', 'Asked for Zelle'):");
         if (!reason) return;
-        // Instant optimistic UI update
+        const nowStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
         CURRENT_STATE.reports = CURRENT_STATE.reports || {};
         CURRENT_STATE.reports[cleanId] = CURRENT_STATE.reports[cleanId] || [];
-        CURRENT_STATE.reports[cleanId].push({ reporter: name.trim(), reason: reason.trim(), time: 'Just now' });
+        CURRENT_STATE.reports[cleanId].push({ reporter: name.trim(), reason: reason.trim(), time: nowStr });
         renderTeamState(CURRENT_STATE);
 
-        await ensureApiBase();
-        const res = await fetch(API_BASE + '/api/report', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: cleanId, name: name.trim(), reason: reason.trim()})
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (data.state) renderTeamState(data.state);
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/report', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: cleanId, name: name.trim(), reason: reason.trim()})
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.state) renderTeamState(data.state);
+            }
+        } else {
+            await publishCloudState(CURRENT_STATE);
         }
     } catch (e) {} finally {
         isDialogOpen = false;
@@ -1793,15 +1793,18 @@ async function clearReport(id) {
     if (CURRENT_STATE.reports) delete CURRENT_STATE.reports[cleanId];
     renderTeamState(CURRENT_STATE);
     try {
-        await ensureApiBase();
-        const res = await fetch(API_BASE + '/api/clear_report', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: cleanId})
-        });
-        if (res.ok) {
-            const data = await res.json();
-            if (data.state) renderTeamState(data.state);
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/clear_report', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: cleanId})
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.state) renderTeamState(data.state);
+            }
+        } else {
+            await publishCloudState(CURRENT_STATE);
         }
     } catch (e) {}
 }
