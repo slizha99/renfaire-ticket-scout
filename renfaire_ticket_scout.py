@@ -1004,8 +1004,21 @@ def audit_facebook_seller_profile(context: Any, profile_url: str) -> SellerProfi
     return seller
 
 
+def clean_fb_post_text(raw: str) -> str:
+    """Strip Facebook's anti-scraper 'Facebook' spam spans and 1-2 char timestamp obfuscation lines."""
+    out: list[str] = []
+    for ln in raw.splitlines():
+        s = re.sub(r"[\u034f\u200b\u200c\u200d\ufeff\s]+", " ", ln).strip()
+        if not s or s.lower() in ("facebook", "like", "comment", "share", "send", "write a comment…", "write a comment..."):
+            continue
+        if len(s) <= 2:
+            continue
+        out.append(s)
+    return "\n".join(out)
+
+
 def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[TicketListing]:
-    """Use a persistent Chromium context to check Brokers, FB Marketplace, and Vetted FB Groups."""
+    """Use a persistent Chromium context to check Brokers, FB Marketplace, FB Global Search, and Vetted FB Groups."""
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -1021,6 +1034,7 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
         context = p.chromium.launch_persistent_context(
             user_data_dir=str(profile_dir),
             headless=headless,
+            args=["--disable-blink-features=AutomationControlled"],
             viewport={"width": 1280, "height": 900},
             user_agent=USER_AGENT,
         )
@@ -1130,9 +1144,52 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
             except Exception as exc:
                 print(f"[warn] Craigslist ({cl_region}) check skipped: {exc}", file=sys.stderr)
 
-        # --- A0b. Check Google Search ("Past 24 Hours" Web Discovery), Nextdoor, CashorTrade, Tixel ---
+        # --- A0b. Multi-Page Google & Bing Web Search (Pages 1-3 + Targeted Site Search) + Nextdoor ---
+        web_search_queries = [
+            ("Google Web Search (Past 24h - Page 1)", "https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+(%22ticket%22+OR+%22tickets%22)+(%2224%22+OR+%22Saturday%22)&tbs=qdr:d&start=0"),
+            ("Google Web Search (Past 24h - Page 2)", "https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+(%22ticket%22+OR+%22tickets%22)+(%2224%22+OR+%22Saturday%22)&tbs=qdr:d&start=10"),
+            ("Google Web Search (Past Week - Sellers)", "https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22Casa+de+Fruta%22)+(%22selling%22+OR+%22for+sale%22+OR+%22extra+ticket%22+OR+%22extra+tickets%22)+(%22Oct+24%22+OR+%2210/24%22+OR+%22October+24%22)&tbs=qdr:w&start=0"),
+            ("Google Social Index (FB/IG/Threads/Reddit)", "https://www.google.com/search?q=(site:facebook.com+OR+site:reddit.com+OR+site:instagram.com+OR+site:threads.net)+(%22norcal+ren+faire%22+OR+%22northern+california+renaissance+faire%22)+(%22selling%22+OR+%22tickets%22)+(%2210/24%22+OR+%22oct+24%22+OR+%22october+24%22)&tbs=qdr:w"),
+            ("Bing Web Search (Page 1 - Oct 24 Tickets)", "https://www.bing.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22Casa+de+Fruta%22)+(%22selling%22+OR+%22tickets%22)+(%22Oct+24%22+OR+%2210%2F24%22+OR+%22October+24%22)& first=1"),
+            ("Bing Web Search (Page 2 - Oct 24 Tickets)", "https://www.bing.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22Casa+de+Fruta%22)+(%22selling%22+OR+%22tickets%22)+(%22Oct+24%22+OR+%2210%2F24%22+OR+%22October+24%22)&first=11"),
+        ]
+        for s_name, s_url in web_search_queries:
+            try:
+                page.goto(s_url, wait_until="domcontentloaded", timeout=18000)
+                page.wait_for_timeout(2500)
+                if "sorry/index" in page.url.lower():
+                    continue
+                result_cards = page.locator("div.MjjYud, div.g, li.b_algo").all()
+                for r_card in result_cards[:12]:
+                    card_text = r_card.inner_text().strip()
+                    if len(card_text) < 25:
+                        continue
+                    low_c = card_text.lower()
+                    if not any(k in low_c for k in ("renaissance", "ren faire", "ren fair", "norcal", "casa de fruta")):
+                        continue
+                    link_el = r_card.locator("a[href^='http']").first
+                    target_href = link_el.get_attribute("href") if link_el.count() > 0 else s_url
+                    if not target_href or "google.com/search" in target_href:
+                        target_href = s_url
+                    lines = [ln.strip() for ln in card_text.splitlines() if len(ln.strip()) > 4]
+                    title_line = lines[0][:90] if lines else f"{s_name} Result"
+                    body_snippet = "\n".join(lines[:6])[:500]
+                    reason = classify_filtered_reason(f"{title_line}\n{body_snippet}", platform=s_name)
+                    listing = TicketListing(
+                        id=f"web-{stable_id_hash(target_href + title_line[:40])}",
+                        platform=s_name,
+                        title=f"{title_line[:85]}",
+                        url=target_href,
+                        body=body_snippet,
+                        posted_utc=datetime.now(timezone.utc).isoformat(),
+                        price_usd=extract_price(body_snippet),
+                    )
+                    discovered.append(mark_filtered(listing, reason) if reason else score_listing(listing))
+                update_dashboard(discovered, datetime.now().strftime("%I:%M:%S %p") + f" (Scanned {s_name}...)")
+            except Exception as exc:
+                print(f"[warn] {s_name} check skipped: {exc}", file=sys.stderr)
+
         extra_marketplaces = [
-            ("Google Live Web Search (Past 24h)", "https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+%22ticket%22+%2224%22&tbs=qdr:d"),
             ("Nextdoor (For Sale & Free - Faire)", "https://nextdoor.com/for_sale_and_free/?query=renaissance%20faire"),
             ("Nextdoor (For Sale & Free - Fair/Casa de Fruta)", "https://nextdoor.com/for_sale_and_free/?query=casa%20de%20fruta%20tickets"),
             ("Nextdoor (Neighborhood Posts - Faire)", "https://nextdoor.com/news_feed/?query=renaissance%20faire%20ticket"),
@@ -1253,42 +1310,60 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
             except Exception as exc:
                 print(f"[warn] {fb_mp_label} check skipped: {exc}", file=sys.stderr)
 
-        # --- C. Check All 5 Vetted Facebook Community Groups (Posts + Comments on ISO Posts) ---
-        for group_label, group_url in FB_GROUP_URLS:
+        # --- C. Check Facebook Global Post Search + All 8 Vetted Facebook Groups (Feed + In-Group Search + Comments) ---
+        fb_targets: list[tuple[str, str]] = [
+            ("FB Global Search (NorCal Ren Faire Tickets)", "https://www.facebook.com/search/posts/?q=norcal%20ren%20faire%20tickets"),
+            ("FB Global Search (Northern CA Renaissance Faire)", "https://www.facebook.com/search/posts/?q=northern%20california%20renaissance%20faire%20tickets"),
+            ("FB Global Search (Casa de Fruta Tickets)", "https://www.facebook.com/search/posts/?q=casa%20de%20fruta%20tickets"),
+        ]
+        for g_label, g_url in FB_GROUP_URLS:
+            fb_targets.append((g_label, g_url))
+            base_g = g_url.split("?")[0].rstrip("/")
+            fb_targets.append((f"{g_label} (Search: ticket)", f"{base_g}/search/?q=ticket"))
+
+        for group_label, group_url in fb_targets:
             try:
                 page.goto(group_url, wait_until="domcontentloaded", timeout=20000)
                 page.wait_for_timeout(3000)
                 # Scroll down to trigger Facebook feed lazy-loading
                 for _ in range(3):
                     page.mouse.wheel(0, 1200)
-                    page.wait_for_timeout(1200)
+                    page.wait_for_timeout(1000)
 
-                # Expand "View more comments" / "comments" buttons if visible so we see replies on ISO posts
+                # Expand "See more" and "View more comments" buttons if visible
                 try:
-                    more_btns = page.locator('span:has-text("View more comments"), span:has-text("more comment")').all()
-                    for btn in more_btns[:6]:
-                        btn.click(timeout=1200)
-                        page.wait_for_timeout(500)
+                    more_btns = page.locator('div[role="button"]:has-text("See more"), span:has-text("View more comments"), span:has-text("more comment")').all()
+                    for btn in more_btns[:8]:
+                        btn.click(timeout=1000)
+                        page.wait_for_timeout(300)
                 except Exception:
                     pass
 
-                articles = page.locator('div[role="article"]').all()
+                articles = page.locator('div[role="feed"] > div, div[role="article"]').all()
                 for idx, article in enumerate(articles[:18]):
                     aria_lbl = (article.get_attribute("aria-label") or "").lower()
                     if aria_lbl.startswith("comment by") or aria_lbl.startswith("reply by"):
                         continue  # Handled inside its parent post's comment_nodes loop
-                    post_text = article.inner_text().strip()
+                    raw_post_text = article.inner_text().strip()
+                    post_text = clean_fb_post_text(raw_post_text)
                     if not post_text or len(post_text) < 20:
                         continue
                     if not any(k in post_text.lower() for k in ("ticket", "tix", "oct", "10/24", "ren", "faire", "pass", "saturday")):
                         continue
+
+                    post_link_el = article.locator('a[href*="/posts/"], a[href*="/permalink/"]').first
+                    post_permalink = group_url
+                    if post_link_el.count() > 0:
+                        phref = post_link_el.get_attribute("href") or ""
+                        if phref:
+                            post_permalink = (f"https://www.facebook.com{phref}" if phref.startswith("/") else phref).split("?")[0]
 
                     # Always inspect nested comments under any Faire/ticket group post (ISO posts, megathreads, etc.)
                     comment_nodes = article.locator('div[role="article"]').all()
                     cmt_summaries: list[str] = []
                     parent_only_text = post_text
                     for c_idx, c_node in enumerate(comment_nodes):
-                        c_text = c_node.inner_text().strip()
+                        c_text = clean_fb_post_text(c_node.inner_text().strip())
                         if not c_text:
                             continue
                         parent_only_text = parent_only_text.replace(c_text, "").strip()
@@ -1306,10 +1381,10 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
                             c_seller = audit_facebook_seller_profile(context, c_seller.profile_url)
                         cmt_summaries.append(f"{c_author}: \"{c_first[:40]}\" -> {'Seller (Added as card)' if not c_reason else c_reason}")
                         c_listing = TicketListing(
-                            id=f"fb-iso-cmt-{group_label[:15]}-{c_first[:30]}",
+                            id=f"fb-iso-cmt-{stable_id_hash(group_label + c_first[:40])}",
                             platform=f"{group_label} (Comment)",
                             title=f"Comment on FB post: {c_first[:75]}",
-                            url=group_url,
+                            url=post_permalink,
                             body=f"Comment on FB Group Post:\n{c_text[:500]}",
                             posted_utc=datetime.now(timezone.utc).isoformat(),
                             price_usd=extract_price(c_text),
@@ -1333,10 +1408,10 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
                         iso_body = f"{post_text[:420]}\n{cmt_audit_str}"
                         reason = classify_filtered_reason(f"{first_line}\n{iso_body}", platform=group_label)
                         iso_listing = TicketListing(
-                            id=f"fb-grp-iso-{group_label[:12]}-{first_line[:30]}",
+                            id=f"fb-grp-iso-{stable_id_hash(group_label + first_line[:40])}",
                             platform=group_label,
                             title=f"[ISO Buyer Post] {first_line[:75]}",
-                            url=group_url,
+                            url=post_permalink,
                             body=iso_body,
                             posted_utc=datetime.now(timezone.utc).isoformat(),
                             price_usd=extract_price(post_text),
@@ -1347,19 +1422,20 @@ def scrape_with_playwright(profile_dir: Path, headless: bool = False) -> list[Ti
                     post_body_with_audit = f"{post_text[:480]}\n{cmt_audit_str}"
                     reason = classify_filtered_reason(post_body_with_audit, platform=group_label)
 
-                    user_links = article.locator('a[href*="/user/"], a[href*="facebook.com/profile.php"]').all()
+                    user_links = article.locator('a[href*="/user/"], a[href*="facebook.com/profile.php"], a[href*="facebook.com/"]').all()
                     seller_profile = None
                     if user_links and not reason:
                         u_href = user_links[0].get_attribute("href") or ""
                         u_url = f"https://www.facebook.com{u_href}" if u_href.startswith("/") else u_href
-                        seller_profile = audit_facebook_seller_profile(context, u_url.split("?")[0])
+                        if "/groups/" not in u_url and "/search/" not in u_url:
+                            seller_profile = audit_facebook_seller_profile(context, u_url.split("?")[0])
 
                     first_line = next((ln.strip() for ln in post_text.splitlines() if len(ln.strip()) > 10), "FB Group Post")
                     listing = TicketListing(
-                        id=f"fb-grp-{group_label[:12]}-{first_line[:35]}",
+                        id=f"fb-grp-{stable_id_hash(group_label + first_line[:45])}",
                         platform=group_label,
                         title=first_line[:90],
-                        url=group_url,
+                        url=post_permalink,
                         body=post_body_with_audit,
                         posted_utc=datetime.now(timezone.utc).isoformat(),
                         price_usd=extract_price(post_text),
