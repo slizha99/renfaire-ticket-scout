@@ -63,9 +63,12 @@ FB_MARKETPLACE_URLS = [
 FB_GROUP_URLS = [
     ("FB Group: Greater Bay Area Costumers Guild (GBACG)", "https://www.facebook.com/groups/gbacg/?sorting_setting=CHRONOLOGICAL"),
     ("FB Group: NorCal Ren Faire Friends", "https://www.facebook.com/groups/Renfaire/?sorting_setting=CHRONOLOGICAL"),
-    ("FB Group: Bay Area Cosplay Community", "https://www.facebook.com/groups/350873855090947/?sorting_setting=CHRONOLOGICAL"),
     ("FB Group: SF Bay Area Buy Sell Swap", "https://www.facebook.com/groups/1199093111075043/?sorting_setting=CHRONOLOGICAL"),
-    ("FB Group: California Ren Faire Friends", "https://www.facebook.com/groups/CCRenFaireFriends/?sorting_setting=CHRONOLOGICAL"),
+    ("FB Group: NorCal Ren Faire Friends #2", "https://www.facebook.com/groups/268868156859473/?sorting_setting=CHRONOLOGICAL"),
+    ("FB Group: NorCal Ren Faire Official Fan Community", "https://www.facebook.com/groups/3813768458918103/?sorting_setting=CHRONOLOGICAL"),
+    ("FB Group: Renaissance & Dickens Faire Roll Call", "https://www.facebook.com/groups/313218837900/?sorting_setting=CHRONOLOGICAL"),
+    ("FB Group: SF Bay Area Buy Sell Trade Donate", "https://www.facebook.com/groups/393685207478955/?sorting_setting=CHRONOLOGICAL"),
+    ("FB Group: San Jose Local Marketplace", "https://www.facebook.com/groups/2172191996700376/?sorting_setting=CHRONOLOGICAL"),
 ]
 
 USER_AGENT = (
@@ -1577,6 +1580,12 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
     </tr>
     """ if not rows_html else "".join(rows_html)
 
+    try:
+        from dashboard_server import load_team_state, public_state_view
+        initial_team_state_json = json.dumps(public_state_view(load_team_state()))
+    except Exception:
+        initial_team_state_json = '{"claims":{},"reports":{},"manual_leads":[],"subscribers":[]}'
+
     html_doc = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1786,8 +1795,79 @@ def update_dashboard(all_discovered: list[TicketListing], last_scan_str: str) ->
 
 <script>
 let isDialogOpen = false;
+let API_BASE = '';
+const INITIAL_TEAM_STATE = {initial_team_state_json};
+
 function esc(s) {{
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}}
+
+function renderTeamState(state) {{
+    if (!state) return;
+    const subs = state.subscribers || [];
+    const subBox = document.getElementById('subscribersListBox');
+    if (subBox) {{
+        if (subs.length === 0) {{
+            subBox.innerHTML = '👥 0 signed up for alerts';
+        }} else {{
+            subBox.innerHTML = '👥 <b>' + subs.length + ' signed up:</b> ' + subs.map(s => {{
+                const contact = [s.masked_phone || '', s.masked_email || ''].filter(Boolean).join(' / ');
+                return `<span class="sub-pill"><b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
+            }}).join('');
+        }}
+    }}
+    document.querySelectorAll('tr.row-item').forEach(row => {{
+        const id = row.getAttribute('data-id');
+        const claimBox = row.querySelector('.claim-status-box');
+        const reportBox = row.querySelector('.user-reports-box');
+        const claim = (state.claims || {{}})[id];
+        if (claim && claim.name) {{
+            claimBox.innerHTML = `<div class="claim-pill">💬 <b>${{esc(claim.name)}}</b>: ${{esc(claim.status)}} <span class="sub">(${{esc(claim.updated_at)}})</span></div>`;
+        }} else {{
+            claimBox.innerHTML = `<div class="sub" style="margin-bottom:4px;">Nobody messaging yet</div>`;
+        }}
+        const reports = (state.reports || {{}})[id] || [];
+        if (reports.length > 0) {{
+            reportBox.innerHTML = reports.map(r => `<div class="report-pill">🚨 <b>Reported by ${{esc(r.reporter)}}:</b> ${{esc(r.reason)}} <span class="sub">(${{esc(r.time)}})</span></div>`).join('');
+            row.style.background = 'rgba(239, 68, 68, 0.08)';
+        }} else {{
+            reportBox.innerHTML = '';
+            row.style.background = '';
+        }}
+    }});
+}}
+
+async function checkLiveTunnelFromGitHubPages() {{
+    if (!window.location.hostname.endsWith('github.io')) return;
+    try {{
+        const r = await fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1');
+        const t = await r.text();
+        const lines = t.trim().split('\n').filter(Boolean);
+        let tunnelUrl = '';
+        for (let i = lines.length - 1; i >= 0; i--) {{
+            try {{
+                const obj = JSON.parse(lines[i]);
+                if (obj && obj.message && obj.message.startsWith('https://')) {{
+                    tunnelUrl = obj.message.replace(/\\/+$/, '');
+                    break;
+                }}
+            }} catch (e) {{}}
+        }}
+        if (!tunnelUrl) return;
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 2500);
+        const ping = await fetch(tunnelUrl + '/api/state?t=' + Date.now(), {{ signal: ctrl.signal }});
+        clearTimeout(timer);
+        if (ping.ok) {{
+            API_BASE = tunnelUrl;
+            window.top.location.replace(tunnelUrl);
+        }}
+    }} catch (e) {{
+        const pill = document.querySelector('.status-pill');
+        if (pill && !pill.textContent.includes('Saved Snapshot')) {{
+            pill.textContent = '● Saved Snapshot (Host PC Asleep — Auto-Resumes When Awake)';
+        }}
+    }}
 }}
 
 function playTicketChime() {{
@@ -1870,7 +1950,7 @@ async function subscribeAlerts(ev) {{
     msgEl.style.color = '#93c5fd';
     msgEl.textContent = 'Subscribing...';
     try {{
-        const res = await fetch('/api/subscribe', {{
+        const res = await fetch(API_BASE + '/api/subscribe', {{
             method: 'POST',
             headers: {{'Content-Type': 'application/json'}},
             body: JSON.stringify({{name, phone, email}})
@@ -1888,13 +1968,13 @@ async function subscribeAlerts(ev) {{
         }}
     }} catch (e) {{
         msgEl.style.color = '#f87171';
-        msgEl.textContent = 'Connection error.';
+        msgEl.textContent = 'Host PC is currently asleep — try again in a few minutes.';
     }}
 }}
 
 async function unsubscribeAlert(id) {{
     if (!confirm('Remove this alert subscription?')) return;
-    await fetch('/api/unsubscribe', {{
+    await fetch(API_BASE + '/api/unsubscribe', {{
         method: 'POST',
         headers: {{'Content-Type': 'application/json'}},
         body: JSON.stringify({{id}})
@@ -1904,40 +1984,10 @@ async function unsubscribeAlert(id) {{
 
 async function syncTeamState() {{
     try {{
-        const res = await fetch('/api/state?t=' + Date.now());
+        const res = await fetch(API_BASE + '/api/state?t=' + Date.now());
         if (!res.ok) return;
         const state = await res.json();
-        const subs = state.subscribers || [];
-        const subBox = document.getElementById('subscribersListBox');
-        if (subBox) {{
-            if (subs.length === 0) {{
-                subBox.innerHTML = '👥 0 signed up for alerts';
-            }} else {{
-                subBox.innerHTML = '👥 <b>' + subs.length + ' signed up:</b> ' + subs.map(s => {{
-                    const contact = [s.masked_phone || '', s.masked_email || ''].filter(Boolean).join(' / ');
-                    return `<span class="sub-pill"><b>${{esc(s.name)}}</b> (${{esc(contact)}}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${{esc(s.id)}}')">✕</button></span>`;
-                }}).join('');
-            }}
-        }}
-        document.querySelectorAll('tr.row-item').forEach(row => {{
-            const id = row.getAttribute('data-id');
-            const claimBox = row.querySelector('.claim-status-box');
-            const reportBox = row.querySelector('.user-reports-box');
-            const claim = (state.claims || {{}})[id];
-            if (claim && claim.name) {{
-                claimBox.innerHTML = `<div class="claim-pill">💬 <b>${{esc(claim.name)}}</b>: ${{esc(claim.status)}} <span class="sub">(${{esc(claim.updated_at)}})</span></div>`;
-            }} else {{
-                claimBox.innerHTML = `<div class="sub" style="margin-bottom:4px;">Nobody messaging yet</div>`;
-            }}
-            const reports = (state.reports || {{}})[id] || [];
-            if (reports.length > 0) {{
-                reportBox.innerHTML = reports.map(r => `<div class="report-pill">🚨 <b>Reported by ${{esc(r.reporter)}}:</b> ${{esc(r.reason)}} <span class="sub">(${{esc(r.time)}})</span></div>`).join('');
-                row.style.background = 'rgba(239, 68, 68, 0.08)';
-            }} else {{
-                reportBox.innerHTML = '';
-                row.style.background = '';
-            }}
-        }});
+        renderTeamState(state);
     }} catch (e) {{}}
 }}
 
@@ -1952,7 +2002,7 @@ async function claimListing(id) {{
         if (name.trim()) {{
             status = prompt("Status (e.g., 'Messaging Seller', 'Verifying', 'Bought Tickets!'):", "Messaging Seller") || "Messaging Seller";
         }}
-        await fetch('/api/claim', {{
+        await fetch(API_BASE + '/api/claim', {{
             method: 'POST',
             headers: {{'Content-Type': 'application/json'}},
             body: JSON.stringify({{id, name: name.trim(), status}})
@@ -1971,7 +2021,7 @@ async function reportListing(id) {{
         if (name.trim()) localStorage.setItem('renfaire_user_name', name.trim());
         const reason = prompt("Why is this seller suspicious? (e.g., 'Refused PayPal G&S', 'Sent fake screenshot', 'Asked for Zelle'):");
         if (!reason) return;
-        await fetch('/api/report', {{
+        await fetch(API_BASE + '/api/report', {{
             method: 'POST',
             headers: {{'Content-Type': 'application/json'}},
             body: JSON.stringify({{id, name: name.trim(), reason: reason.trim()}})
@@ -1986,9 +2036,12 @@ const savedUser = localStorage.getItem('renfaire_user_name');
 if (savedUser && document.getElementById('subName')) {{
     document.getElementById('subName').value = savedUser;
 }}
+renderTeamState(INITIAL_TEAM_STATE);
+checkLiveTunnelFromGitHubPages();
 checkNewRowsForBrowserAlert();
 syncTeamState();
 setInterval(syncTeamState, 3000);
+setInterval(checkLiveTunnelFromGitHubPages, 15000);
 setInterval(() => {{
     const activeTag = document.activeElement ? document.activeElement.tagName : '';
     const isTyping = ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeTag);
@@ -1998,7 +2051,38 @@ setInterval(() => {{
 </body>
 </html>"""
     DASHBOARD_FILE.write_text(html_doc, encoding="utf-8")
-    Path("index.html").write_text(html_doc, encoding="utf-8")
+    if DASHBOARD_FILE == Path("dashboard.html"):
+        Path("index.html").write_text(html_doc, encoding="utf-8")
+        docs_dir = Path("docs")
+        docs_dir.mkdir(exist_ok=True)
+        (docs_dir / "index.html").write_text(html_doc, encoding="utf-8")
+        sync_github_pages_snapshot(html_doc, visible_items, initial_team_state_json)
+
+
+def sync_github_pages_snapshot(html_doc: str, visible_items: list[dict[str, Any]], team_state_json: str) -> None:
+    """Keep docs/index.html on GitHub Pages updated whenever visible listings or team state change."""
+    try:
+        import base64
+        sig_payload = json.dumps([x.get("id") for x in visible_items], sort_keys=True) + "|" + team_state_json
+        sig_hash = stable_id_hash(sig_payload)
+        sig_file = Path(".last_gh_pages_hash")
+        if sig_file.exists() and sig_file.read_text(encoding="utf-8").strip() == sig_hash:
+            return
+        gh_exe = Path(r"C:\Program Files\GitHub CLI\gh.exe")
+        if not gh_exe.exists():
+            return
+        sig_file.write_text(sig_hash, encoding="utf-8")
+        repo = "slizha99/renfaire-ticket-scout"
+        rel = "docs/index.html"
+        content_b64 = base64.b64encode(html_doc.encode("utf-8")).decode("ascii")
+        r_get = subprocess.run([str(gh_exe), "api", f"repos/{repo}/contents/{rel}", "--jq", ".sha"], capture_output=True, text=True, timeout=8)
+        sha = r_get.stdout.strip() if r_get.returncode == 0 else None
+        payload: dict[str, Any] = {"message": "Auto-sync static dashboard fallback snapshot to GitHub Pages", "content": content_b64}
+        if sha:
+            payload["sha"] = sha
+        subprocess.run([str(gh_exe), "api", "--method", "PUT", f"repos/{repo}/contents/{rel}", "--input", "-"], input=json.dumps(payload), capture_output=True, text=True, timeout=12)
+    except Exception:
+        pass
 
 
 def print_listing_report(listing: TicketListing) -> None:
@@ -2225,6 +2309,13 @@ def main() -> None:
         f"Starting NorCal Ren Faire Oct 24 Ticket Scout (polling every {args.interval}s, "
         f"browser={'ON' if args.browser else 'OFF'})..."
     )
+    if platform.system() == "Windows":
+        try:
+            import ctypes
+            # ES_CONTINUOUS (0x80000000) | ES_SYSTEM_REQUIRED (0x00000001): prevent idle sleep while scouting
+            ctypes.windll.kernel32.SetThreadExecutionState(0x80000001)
+        except Exception:
+            pass
     while True:
         run_scan(
             use_browser=args.browser,
