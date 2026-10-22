@@ -206,7 +206,25 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
 
+def _tunnel_watchdog_loop() -> None:
+    """Keep the Cloudflare tunnel alive and re-sync ntfy every 45s in case the laptop wakes from sleep."""
+    import time
+    try:
+        import ctypes
+        ctypes.windll.kernel32.SetThreadExecutionState(0x80000001)
+    except Exception:
+        pass
+    while True:
+        time.sleep(45)
+        try:
+            import renfaire_ticket_scout as r
+            r.sync_permanent_partiful_link()
+        except Exception:
+            pass
+
+
 if __name__ == "__main__":
+    threading.Thread(target=_tunnel_watchdog_loop, daemon=True).start()
     server = ThreadingHTTPServer(("127.0.0.1", 8765), DashboardHandler)
     print("Serving interactive ticket scout dashboard on http://127.0.0.1:8765 ...")
     server.serve_forever()
