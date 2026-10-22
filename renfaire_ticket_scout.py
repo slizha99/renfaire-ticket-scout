@@ -1840,7 +1840,7 @@ function renderTeamState(state) {{
 async function checkLiveTunnelFromGitHubPages() {{
     if (!window.location.hostname.endsWith('github.io')) return;
     try {{
-        const r = await fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1');
+        const r = await fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1&t=' + Date.now());
         const t = await r.text();
         const lines = t.trim().split('\n').filter(Boolean);
         let tunnelUrl = '';
@@ -1860,12 +1860,32 @@ async function checkLiveTunnelFromGitHubPages() {{
         clearTimeout(timer);
         if (ping.ok) {{
             API_BASE = tunnelUrl;
-            window.top.location.replace(tunnelUrl);
+            const state = await ping.json();
+            renderTeamState(state);
+            // Also hot-sync latest table & stats from live server without leaving github.io
+            const htmlRes = await fetch(tunnelUrl + '/dashboard.html?t=' + Date.now());
+            if (htmlRes.ok) {{
+                const htmlText = await htmlRes.text();
+                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+                const newStats = doc.querySelector('.stats');
+                const newTbody = doc.querySelector('table tbody');
+                const newPill = doc.querySelector('.status-pill');
+                if (newStats && document.querySelector('.stats')) {{
+                    document.querySelector('.stats').innerHTML = newStats.innerHTML;
+                }}
+                if (newTbody && document.querySelector('table tbody')) {{
+                    document.querySelector('table tbody').innerHTML = newTbody.innerHTML;
+                }}
+                if (newPill && document.querySelector('.status-pill')) {{
+                    document.querySelector('.status-pill').textContent = newPill.textContent;
+                }}
+                renderTeamState(state);
+            }}
         }}
     }} catch (e) {{
         const pill = document.querySelector('.status-pill');
         if (pill && !pill.textContent.includes('Saved Snapshot')) {{
-            pill.textContent = '● Saved Snapshot (Host PC Asleep — Auto-Resumes When Awake)';
+            pill.textContent = '● Saved Snapshot (Auto-Syncs When Scanner Sweep Completes)';
         }}
     }}
 }}
@@ -2138,12 +2158,19 @@ def sync_permanent_partiful_link() -> None:
             metrics = urllib.request.urlopen(f"http://127.0.0.1:{port}/metrics", timeout=2).read().decode("utf-8", errors="ignore")
             m = re.findall(r"https://[a-z0-9-]+\.trycloudflare\.com", metrics)
             if m:
-                active_tunnel_url = m[0]
+                candidate_url = m[0]
+                # Verify the Cloudflare tunnel is actually reachable externally (not expired after PC sleep)
+                urllib.request.urlopen(f"{candidate_url}/api/state", timeout=4)
+                active_tunnel_url = candidate_url
                 break
         except Exception:
             continue
 
     if not active_tunnel_url:
+        try:
+            subprocess.run(["taskkill", "/F", "/IM", "cloudflared.exe"], capture_output=True, timeout=4)
+        except Exception:
+            pass
         try:
             cf_exe = Path(__file__).resolve().parent / "cloudflared.exe"
             if cf_exe.exists():
@@ -2152,11 +2179,16 @@ def sync_permanent_partiful_link() -> None:
                     cwd=str(Path(__file__).resolve().parent),
                     creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
                 )
-                time.sleep(5)
-                metrics = urllib.request.urlopen("http://127.0.0.1:20241/metrics", timeout=3).read().decode("utf-8", errors="ignore")
-                m = re.findall(r"https://[a-z0-9-]+\.trycloudflare\.com", metrics)
-                if m:
-                    active_tunnel_url = m[0]
+                for _ in range(8):
+                    time.sleep(1.5)
+                    try:
+                        metrics = urllib.request.urlopen("http://127.0.0.1:20241/metrics", timeout=2).read().decode("utf-8", errors="ignore")
+                        m = re.findall(r"https://[a-z0-9-]+\.trycloudflare\.com", metrics)
+                        if m:
+                            active_tunnel_url = m[0]
+                            break
+                    except Exception:
+                        continue
         except Exception:
             pass
 
