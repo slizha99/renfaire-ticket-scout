@@ -1,36 +1,664 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>NorCal Ren Faire (Sat Oct 24) — Ticket Scout</title>
-</head>
-<body style="background:#0f172a;color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;">
-<div>
-  <h2 style="margin-bottom:8px;">🏰 Connecting to Live NorCal Ren Faire Ticket Board...</h2>
-  <p style="color:#94a3b8;font-size:14px;">Redirecting automatically to the active dashboard...</p>
-  <p style="margin-top:16px;"><a id="directLink" href="https://merry-respective-mountain-par.trycloudflare.com" style="color:#34d399;font-weight:600;">Click here if not redirected automatically ↗</a></p>
-</div>
-<script>
-const FALLBACK_URL = 'https://merry-respective-mountain-par.trycloudflare.com';
-fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1')
-  .then(r => r.text())
-  .then(t => {
-    const lines = t.trim().split('\n').filter(Boolean);
-    for (let i = lines.length - 1; i >= 0; i--) {
-      try {
-        const obj = JSON.parse(lines[i]);
-        if (obj && obj.message && obj.message.startsWith('https://')) {
-          document.getElementById('directLink').href = obj.message;
-          window.top.location.replace(obj.message);
-          return;
-        }
-      } catch (e) {}
+<meta charset="UTF-8">
+<title>NorCal Ren Faire (Sat Oct 24) — Live Ticket Scout & Scam Dashboard</title>
+<style>
+    :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --border: #334155;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --green: #10b981;
+        --amber: #f59e0b;
+        --red: #ef4444;
     }
-    window.top.location.replace(FALLBACK_URL);
-  })
-  .catch(() => {
-    window.top.location.replace(FALLBACK_URL);
-  });
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 28px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg); color: var(--text);
+    }
+    .header {
+        display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;
+        background: var(--card); border: 1px solid var(--border);
+        padding: 14px 20px; border-radius: 14px; margin-bottom: 12px;
+    }
+    .title-area { flex: 1; min-width: 300px; }
+    .title-area h1 { margin: 0 0 4px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .title-area p { margin: 0; color: var(--muted); font-size: 12.5px; }
+    .status-pill {
+        background: rgba(16, 185, 129, 0.15); border: 1px solid var(--green);
+        color: #34d399; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+    }
+    .stats {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px;
+    }
+    .stat-card {
+        background: var(--card); border: 1px solid var(--border);
+        padding: 10px 16px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .stat-label { color: var(--muted); font-size: 12.5px; }
+    .stat-val { font-size: 22px; font-weight: 700; }
+    table {
+        width: 100%; border-collapse: collapse; background: var(--card);
+        border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+    th {
+        text-align: left; padding: 14px 16px; background: #0f172a;
+        color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--border);
+    }
+    td {
+        padding: 16px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 14px;
+    }
+    .platform-pill {
+        display: inline-block; background: #334155; color: #e2e8f0;
+        padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    }
+    .post-title {
+        color: #60a5fa; font-weight: 600; text-decoration: none; font-size: 15px;
+    }
+    .post-title:hover { text-decoration: underline; }
+    .post-body { color: #cbd5e1; font-size: 13px; margin-top: 6px; white-space: pre-wrap; }
+    .seller-line { margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .price-cell { font-weight: 700; font-size: 16px; color: #f8fafc; white-space: nowrap; }
+    .badge {
+        display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    }
+    .badge-low { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669; }
+    .badge-med { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #d97706; }
+    .badge-high { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #dc2626; }
+    .verdict-text { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 600; }
+    .progress-bar {
+        width: 140px; height: 6px; background: #334155; border-radius: 99px; margin-top: 8px; overflow: hidden;
+    }
+    .progress-fill.badge-low { background: var(--green); border: none; }
+    .progress-fill.badge-med { background: var(--amber); border: none; }
+    .progress-fill.badge-high { background: var(--red); border: none; }
+    .flag-green { color: #34d399; font-size: 12.5px; margin-bottom: 4px; }
+    .flag-red { color: #f87171; font-size: 12.5px; margin-bottom: 4px; }
+    .sub { color: var(--muted); font-size: 12px; }
+    .tag-local {
+        background: rgba(59, 130, 246, 0.2); color: #93c5fd; padding: 2px 6px;
+        border-radius: 4px; font-size: 11px; margin-left: 4px;
+    }
+    .action-btns { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .btn-claim, .btn-report {
+        cursor: pointer; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 600;
+        border: 1px solid var(--border); text-align: left; transition: 0.15s;
+    }
+    .btn-claim { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: #2563eb; }
+    .btn-claim:hover { background: rgba(59, 130, 246, 0.3); }
+    .btn-report { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border-color: #dc2626; }
+    .btn-report:hover { background: rgba(239, 68, 68, 0.28); }
+    .claim-pill {
+        display: inline-block; background: rgba(59, 130, 246, 0.25); border: 1px solid #3b82f6;
+        color: #bfdbfe; padding: 5px 9px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 6px;
+    }
+    .report-pill {
+        background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444;
+        color: #fecaca; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-top: 6px;
+    }
+    .alert-side {
+        background: rgba(15, 23, 42, 0.75); border: 1px solid #334155;
+        border-radius: 10px; padding: 10px 14px; width: 430px; max-width: 100%;
+        display: flex; flex-direction: column; gap: 6px;
+    }
+    .alert-top {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .alert-form {
+        display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    }
+    .alert-input {
+        background: #0f172a; border: 1px solid var(--border); color: var(--text);
+        padding: 5px 8px; border-radius: 6px; font-size: 12px;
+    }
+    .alert-input:focus { outline: none; border-color: #60a5fa; }
+    .btn-sub {
+        cursor: pointer; background: #2563eb; color: #ffffff; border: 1px solid #3b82f6;
+        padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; transition: 0.15s; white-space: nowrap;
+    }
+    .btn-sub:hover { background: #1d4ed8; }
+    .btn-push {
+        cursor: pointer; background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid #059669;
+        padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none;
+        display: inline-block; transition: 0.15s; white-space: nowrap;
+    }
+    .btn-push:hover { background: rgba(16, 185, 129, 0.28); }
+    .sub-pill {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: rgba(59, 130, 246, 0.14); border: 1px solid #334155;
+        color: #cbd5e1; padding: 2px 7px; border-radius: 999px; font-size: 11px; margin-right: 4px; margin-top: 2px;
+    }
+    .sub-del {
+        cursor: pointer; color: #f87171; font-weight: 700; border: none; background: none; padding: 0 2px; font-size: 11px;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="title-area">
+            <h1>
+                <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
+                <span class="status-pill">● Live | Last Sweep: Just Updated</span>
+            </h1>
+            <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
+            <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;</p>
+        </div>
+
+        <div class="alert-side">
+            <div class="alert-top">
+                <span style="font-size:12.5px; font-weight:700; color:#f8fafc;">🔔 Instant New-Listing Alerts</span>
+                <div style="display:flex; gap:5px;">
+                    <a href="https://ntfy.sh/norcal_renfaire_oct24_tickets" target="_blank" class="btn-push" title="Open mobile push feed">📱 Push Feed</a>
+                    <button type="button" class="btn-push" id="btnBrowserPush" onclick="enableBrowserNotifications()">🔊 Sound Alert</button>
+                </div>
+            </div>
+            <form class="alert-form" onsubmit="subscribeAlerts(event)">
+                <input type="text" id="subName" class="alert-input" placeholder="Name" style="width:78px;" required>
+                <input type="tel" id="subPhone" class="alert-input" placeholder="Phone #" style="width:105px;">
+                <input type="email" id="subEmail" class="alert-input" placeholder="or Email" style="width:125px;">
+                <button type="submit" class="btn-sub">📲 Sign Up</button>
+            </form>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                <div id="subscribersListBox" class="sub" style="font-size:11px;"></div>
+                <span id="subMsg" class="sub" style="font-size:11px;"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Sat Oct 24 Leads (excl. 109 irrelevant)</div>
+            <div class="stat-val">6</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label" style="color:#34d399;">Low Risk (&lt;35%)</div>
+            <div class="stat-val" style="color:#34d399;">2</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label" style="color:#fbbf24;">Medium Risk (35–59%)</div>
+            <div class="stat-val" style="color:#fbbf24;">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label" style="color:#f87171;">Filtered Likely Scams (60%+)</div>
+            <div class="stat-val" style="color:#f87171;">4</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 140px;">Platform & Time</th>
+                <th>Identified Post / Comment & Seller</th>
+                <th style="width: 90px;">Price</th>
+                <th style="width: 170px;">Scam % & Verdict</th>
+                <th style="width: 300px;">Green & Red Flags + Reports</th>
+                <th style="width: 175px;">Group Coordination</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="row-item" data-id=&quot;vf-oct24-Stephieecee-I can sell you Northern C&quot; data-risk="badge-low">
+            <td>
+                <div class="platform-pill">VouchFirst (Oct 24 - SELLING)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-22 01:38:08</div>
+            </td>
+            <td>
+                <a href="https://www.vouchfirst.com/home/artists/northern-california-renaissance-faire/tickets" target="_blank" class="post-title">[SELLING] I can sell you Northern California Renaissance Faire ↗</a>
+                <div class="post-body">Seller: Stephieecee · 1 d ago  (Seller appears on 1 date section(s) on VouchFirst)</div>
+                <div class="seller-line">👤 Seller: Stephieecee</div>
+            </td>
+            <td class="price-cell">Not listed</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-low">10% Scam Risk</span>
+                    <div class="verdict-text">LOW RISK (Promising)</div>
+                    <div class="progress-bar"><div class="progress-fill badge-low" style="width: 10%;"></div></div>
+                </div>
+            </td>
+            <td>
+                <div class='flag-green'>✅ Seller holds &#x27;Vouched&#x27; community reputation status on VouchFirst</div>
+                
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;vf-oct24-Stephieecee-I can sell you Northern C&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;vf-oct24-Stephieecee-I can sell you Northern C&quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr class="row-item" data-id=&quot;vf-oct24-Vini-vidi-Selling 1 general admissi&quot; data-risk="badge-low">
+            <td>
+                <div class="platform-pill">VouchFirst (Oct 24 - SELLING)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-22 01:38:08</div>
+            </td>
+            <td>
+                <a href="https://www.vouchfirst.com/home/artists/northern-california-renaissance-faire/tickets" target="_blank" class="post-title">[SELLING] Selling 1 general admission ticket to the Northern California Renaissance Faire (NorCal Ren Faire) 2026. ↗</a>
+                <div class="post-body">Seller: Vini-vidi 7 d ago (Seller appears on 2 date section(s) on VouchFirst)</div>
+                <div class="seller-line">👤 Seller: Vini-vidi</div>
+            </td>
+            <td class="price-cell">Not listed</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-low">10% Scam Risk</span>
+                    <div class="verdict-text">LOW RISK (Promising)</div>
+                    <div class="progress-bar"><div class="progress-fill badge-low" style="width: 10%;"></div></div>
+                </div>
+            </td>
+            <td>
+                <div class='flag-green'>✅ Seller holds &#x27;Vouched&#x27; community reputation status on VouchFirst</div>
+                
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;vf-oct24-Vini-vidi-Selling 1 general admissi&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;vf-oct24-Vini-vidi-Selling 1 general admissi&quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr class="row-item" data-id=&quot;reddit-post-1x2mhix&quot; data-risk="badge-high">
+            <td>
+                <div class="platform-pill">Reddit (r/TicketResale)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-10 18:32:53</div>
+            </td>
+            <td>
+                <a href="https://www.reddit.com/r/TicketResale/comments/1x2mhix/uniels_h_scammer/" target="_blank" class="post-title">U/Niels_h_ scammer! ↗</a>
+                <div class="post-body">Scammed me out of 17 bucks for norcal renfaire tickets sent the payment and he claimed it didn’t go through even thought it did ! Be aware mods pls ban him.
+[Comments Audit: 3 comments on this Reddit post — no sellers replied]</div>
+                <div class="seller-line">👤 Seller: Empty-Question-7397</div>
+            </td>
+            <td class="price-cell">$17.00</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-high">85% Scam Risk</span>
+                    <div class="verdict-text">FILTERED OUT (Likely Scam Alert: Confirmed NorCal Ren Faire ticket scammer callout (watch out for this username))</div>
+                    <div class="progress-bar"><div class="progress-fill badge-high" style="width: 85%;"></div></div>
+                </div>
+            </td>
+            <td>
+                
+                <div class='flag-red'>🚩 Filtered Out Reason: Likely Scam Alert: Confirmed NorCal Ren Faire ticket scammer callout (watch out for this username)</div><div class='flag-red'>🚩 Suspiciously low price ($17/ticket vs. $42 official face value)</div>
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;reddit-post-1x2mhix&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;reddit-post-1x2mhix&quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr class="row-item" data-id=&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot; data-risk="badge-high">
+            <td>
+                <div class="platform-pill">Google Live Web Search (Past 24h)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-21 23:00:36</div>
+            </td>
+            <td>
+                <a href="https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+%22ticket%22+%2224%22&amp;tbs=qdr:d" target="_blank" class="post-title">Google Live Web Search (Past 24h): GROUP ADMIN HERE RENAISSANCE FAIRE 2026 ↗</a>
+                <div class="post-body">GROUP ADMIN HERE RENAISSANCE FAIRE 2026</div>
+                <div class="seller-line">👤 Seller: Unknown</div>
+            </td>
+            <td class="price-cell">Not listed</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-high">85% Scam Risk</span>
+                    <div class="verdict-text">FILTERED OUT (Likely Scam: Dedicated 'Tickets Buy, Sell & Trade' / 'GROUP ADMIN HERE' Facebook group (known fake-admin deposit scam))</div>
+                    <div class="progress-bar"><div class="progress-fill badge-high" style="width: 85%;"></div></div>
+                </div>
+            </td>
+            <td>
+                
+                <div class='flag-red'>🚩 Filtered Out Reason: Likely Scam: Dedicated &#x27;Tickets Buy, Sell &amp; Trade&#x27; / &#x27;GROUP ADMIN HERE&#x27; Facebook group (known fake-admin deposit scam)</div><div class='flag-red'>🚩 Admin-run &#x27;Ticket Assistance&#x27; scam pattern (fake Facebook group admins stealing deposits)</div>
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr class="row-item" data-id=&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot; data-risk="badge-high">
+            <td>
+                <div class="platform-pill">Google Live Web Search (Past 24h)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-21 23:00:36</div>
+            </td>
+            <td>
+                <a href="https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+%22ticket%22+%2224%22&amp;tbs=qdr:d" target="_blank" class="post-title">Google Live Web Search (Past 24h): Facebook · The Northern California Renaissance Faire 2026 | Tickets Buy, Sell &amp;  ↗</a>
+                <div class="post-body">Facebook · The Northern California Renaissance Faire 2026 | Tickets Buy, Sell &amp; Trade</div>
+                <div class="seller-line">👤 Seller: Unknown</div>
+            </td>
+            <td class="price-cell">Not listed</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-high">85% Scam Risk</span>
+                    <div class="verdict-text">FILTERED OUT (Likely Scam: Dedicated 'Tickets Buy, Sell & Trade' / 'GROUP ADMIN HERE' Facebook group (known fake-admin deposit scam))</div>
+                    <div class="progress-bar"><div class="progress-fill badge-high" style="width: 85%;"></div></div>
+                </div>
+            </td>
+            <td>
+                
+                <div class='flag-red'>🚩 Filtered Out Reason: Likely Scam: Dedicated &#x27;Tickets Buy, Sell &amp; Trade&#x27; / &#x27;GROUP ADMIN HERE&#x27; Facebook group (known fake-admin deposit scam)</div>
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        <tr class="row-item" data-id=&quot;extra-google-... Northern California Renaissance&quot; data-risk="badge-high">
+            <td>
+                <div class="platform-pill">Google Live Web Search (Past 24h)</div>
+                <div class="sub" style="margin-top:6px;">2026-10-21 23:00:55</div>
+            </td>
+            <td>
+                <a href="https://www.google.com/search?q=(%22Northern+California+Renaissance+Faire%22+OR+%22NorCal+Ren+Faire%22+OR+%22NorCal+Ren+Fair%22+OR+%22Casa+de+Fruta%22)+%22ticket%22+%2224%22&amp;tbs=qdr:d" target="_blank" class="post-title">Google Live Web Search (Past 24h): ... Northern California Renaissance Faire, Yhe Final weekend of Ren Faire Octobe ↗</a>
+                <div class="post-body">... Northern California Renaissance Faire, Yhe Final weekend of Ren Faire October 24 ... ticket for ONLY $30.00! (Reg. Price $42.00) Kids ...Read more</div>
+                <div class="seller-line">👤 Seller: Unknown</div>
+            </td>
+            <td class="price-cell">$30.00</td>
+            <td>
+                <div class="score-wrap">
+                    <span class="badge badge-high">85% Scam Risk</span>
+                    <div class="verdict-text">FILTERED OUT (Likely Scam: Suspicious below-face-value ad ('ticket for ONLY $30.00!' with typos for sold-out Oct 24))</div>
+                    <div class="progress-bar"><div class="progress-fill badge-high" style="width: 85%;"></div></div>
+                </div>
+            </td>
+            <td>
+                
+                <div class='flag-red'>🚩 Filtered Out Reason: Likely Scam: Suspicious below-face-value ad (&#x27;ticket for ONLY $30.00!&#x27; with typos for sold-out Oct 24)</div>
+                
+                <div class="user-reports-box"></div>
+            </td>
+            <td>
+                <div class="claim-status-box"></div>
+                <div class="action-btns">
+                    <button class="btn-claim" onclick='claimListing(&quot;extra-google-... Northern California Renaissance&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-report" onclick='reportListing(&quot;extra-google-... Northern California Renaissance&quot;)'>🚨 Report Suspicious</button>
+                </div>
+            </td>
+        </tr>
+        
+        </tbody>
+    </table>
+
+<script>
+let isDialogOpen = false;
+let API_BASE = '';
+const INITIAL_TEAM_STATE = {"claims": {"vf-oct24-Stephieecee-I can sell you Northern C": {"name": "Akash Samant", "status": "Messaging Seller", "updated_at": "04:50 PM"}}, "reports": {}, "manual_leads": [], "subscribers": []};
+
+function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function renderTeamState(state) {
+    if (!state) return;
+    const subs = state.subscribers || [];
+    const subBox = document.getElementById('subscribersListBox');
+    if (subBox) {
+        if (subs.length === 0) {
+            subBox.innerHTML = '👥 0 signed up for alerts';
+        } else {
+            subBox.innerHTML = '👥 <b>' + subs.length + ' signed up:</b> ' + subs.map(s => {
+                const contact = [s.masked_phone || '', s.masked_email || ''].filter(Boolean).join(' / ');
+                return `<span class="sub-pill"><b>${esc(s.name)}</b> (${esc(contact)}) <button class="sub-del" title="Unsubscribe" onclick="unsubscribeAlert('${esc(s.id)}')">✕</button></span>`;
+            }).join('');
+        }
+    }
+    document.querySelectorAll('tr.row-item').forEach(row => {
+        const id = row.getAttribute('data-id');
+        const claimBox = row.querySelector('.claim-status-box');
+        const reportBox = row.querySelector('.user-reports-box');
+        const claim = (state.claims || {})[id];
+        if (claim && claim.name) {
+            claimBox.innerHTML = `<div class="claim-pill">💬 <b>${esc(claim.name)}</b>: ${esc(claim.status)} <span class="sub">(${esc(claim.updated_at)})</span></div>`;
+        } else {
+            claimBox.innerHTML = `<div class="sub" style="margin-bottom:4px;">Nobody messaging yet</div>`;
+        }
+        const reports = (state.reports || {})[id] || [];
+        if (reports.length > 0) {
+            reportBox.innerHTML = reports.map(r => `<div class="report-pill">🚨 <b>Reported by ${esc(r.reporter)}:</b> ${esc(r.reason)} <span class="sub">(${esc(r.time)})</span></div>`).join('');
+            row.style.background = 'rgba(239, 68, 68, 0.08)';
+        } else {
+            reportBox.innerHTML = '';
+            row.style.background = '';
+        }
+    });
+}
+
+async function checkLiveTunnelFromGitHubPages() {
+    if (!window.location.hostname.endsWith('github.io')) return;
+    try {
+        const r = await fetch('https://ntfy.sh/norcal_renfaire_oct24_tunnel_url/json?poll=1');
+        const t = await r.text();
+        const lines = t.trim().split('
+').filter(Boolean);
+        let tunnelUrl = '';
+        for (let i = lines.length - 1; i >= 0; i--) {
+            try {
+                const obj = JSON.parse(lines[i]);
+                if (obj && obj.message && obj.message.startsWith('https://')) {
+                    tunnelUrl = obj.message.replace(/\/+$/, '');
+                    break;
+                }
+            } catch (e) {}
+        }
+        if (!tunnelUrl) return;
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 2500);
+        const ping = await fetch(tunnelUrl + '/api/state?t=' + Date.now(), { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (ping.ok) {
+            API_BASE = tunnelUrl;
+            window.top.location.replace(tunnelUrl);
+        }
+    } catch (e) {
+        const pill = document.querySelector('.status-pill');
+        if (pill && !pill.textContent.includes('Saved Snapshot')) {
+            pill.textContent = '● Saved Snapshot (Host PC Asleep — Auto-Resumes When Awake)';
+        }
+    }
+}
+
+function playTicketChime() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.12);
+            osc.stop(ctx.currentTime + idx * 0.12 + 0.35);
+        });
+    } catch (e) {}
+}
+
+async function enableBrowserNotifications() {
+    const btn = document.getElementById('btnBrowserPush');
+    if ('Notification' in window) {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+            localStorage.setItem('renfaire_browser_push', '1');
+            btn.textContent = '✅ Browser Push & Sound Active';
+            playTicketChime();
+            new Notification('🏰 NorCal Ren Faire Ticket Alerts Active!', {
+                body: 'You will get an instant alert + chime when a Saturday Oct 24 ticket is found.'
+            });
+            return;
+        }
+    }
+    localStorage.setItem('renfaire_browser_push', '1');
+    btn.textContent = '✅ Sound Chime Active';
+    playTicketChime();
+}
+
+function checkNewRowsForBrowserAlert() {
+    if (localStorage.getItem('renfaire_browser_push') === '1') {
+        const btn = document.getElementById('btnBrowserPush');
+        if (btn) btn.textContent = '✅ Browser Push & Sound Active';
+    }
+    const seenRaw = localStorage.getItem('renfaire_seen_alert_ids');
+    const seenIds = new Set(seenRaw ? JSON.parse(seenRaw) : []);
+    let foundNewPromising = null;
+    document.querySelectorAll('tr.row-item').forEach(row => {
+        const id = row.getAttribute('data-id');
+        const risk = row.getAttribute('data-risk');
+        if (id && !seenIds.has(id)) {
+            seenIds.add(id);
+            if (risk === 'badge-low' || risk === 'badge-med') {
+                const titleEl = row.querySelector('.post-title');
+                foundNewPromising = titleEl ? titleEl.textContent : 'New Saturday Oct 24 Ticket Lead!';
+            }
+        }
+    });
+    localStorage.setItem('renfaire_seen_alert_ids', JSON.stringify(Array.from(seenIds)));
+    if (foundNewPromising && seenRaw && localStorage.getItem('renfaire_browser_push') === '1') {
+        playTicketChime();
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('🏰 New Sat Oct 24 Ticket Found!', { body: foundNewPromising });
+        }
+    }
+}
+
+async function subscribeAlerts(ev) {
+    ev.preventDefault();
+    const name = document.getElementById('subName').value.trim();
+    const phone = document.getElementById('subPhone').value.trim();
+    const email = document.getElementById('subEmail').value.trim();
+    const msgEl = document.getElementById('subMsg');
+    if (!phone && !email) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Enter a 10-digit phone number or email address.';
+        return;
+    }
+    if (name) localStorage.setItem('renfaire_user_name', name);
+    msgEl.style.color = '#93c5fd';
+    msgEl.textContent = 'Subscribing...';
+    try {
+        const res = await fetch(API_BASE + '/api/subscribe', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name, phone, email})
+        });
+        const data = await res.json();
+        if (!data.ok) {
+            msgEl.style.color = '#f87171';
+            msgEl.textContent = data.error || 'Could not subscribe.';
+        } else {
+            msgEl.style.color = '#34d399';
+            msgEl.textContent = '✅ Subscribed to instant ticket alerts!';
+            document.getElementById('subPhone').value = '';
+            document.getElementById('subEmail').value = '';
+            syncTeamState();
+        }
+    } catch (e) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = 'Host PC is currently asleep — try again in a few minutes.';
+    }
+}
+
+async function unsubscribeAlert(id) {
+    if (!confirm('Remove this alert subscription?')) return;
+    await fetch(API_BASE + '/api/unsubscribe', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id})
+    });
+    syncTeamState();
+}
+
+async function syncTeamState() {
+    try {
+        const res = await fetch(API_BASE + '/api/state?t=' + Date.now());
+        if (!res.ok) return;
+        const state = await res.json();
+        renderTeamState(state);
+    } catch (e) {}
+}
+
+async function claimListing(id) {
+    isDialogOpen = true;
+    try {
+        const savedName = localStorage.getItem('renfaire_user_name') || '';
+        const name = prompt("Enter your name (leave blank to clear/unclaim):", savedName);
+        if (name === null) return;
+        if (name.trim()) localStorage.setItem('renfaire_user_name', name.trim());
+        let status = "Messaging Seller";
+        if (name.trim()) {
+            status = prompt("Status (e.g., 'Messaging Seller', 'Verifying', 'Bought Tickets!'):", "Messaging Seller") || "Messaging Seller";
+        }
+        await fetch(API_BASE + '/api/claim', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id, name: name.trim(), status})
+        });
+        syncTeamState();
+    } finally {
+        isDialogOpen = false;
+    }
+}
+
+async function reportListing(id) {
+    isDialogOpen = true;
+    try {
+        const savedName = localStorage.getItem('renfaire_user_name') || '';
+        const name = prompt("Your name:", savedName) || "Friend";
+        if (name.trim()) localStorage.setItem('renfaire_user_name', name.trim());
+        const reason = prompt("Why is this seller suspicious? (e.g., 'Refused PayPal G&S', 'Sent fake screenshot', 'Asked for Zelle'):");
+        if (!reason) return;
+        await fetch(API_BASE + '/api/report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id, name: name.trim(), reason: reason.trim()})
+        });
+        syncTeamState();
+    } finally {
+        isDialogOpen = false;
+    }
+}
+
+const savedUser = localStorage.getItem('renfaire_user_name');
+if (savedUser && document.getElementById('subName')) {
+    document.getElementById('subName').value = savedUser;
+}
+renderTeamState(INITIAL_TEAM_STATE);
+checkLiveTunnelFromGitHubPages();
+checkNewRowsForBrowserAlert();
+syncTeamState();
+setInterval(syncTeamState, 3000);
+setInterval(checkLiveTunnelFromGitHubPages, 15000);
+setInterval(() => {
+    const activeTag = document.activeElement ? document.activeElement.tagName : '';
+    const isTyping = ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeTag);
+    if (!isDialogOpen && !isTyping) window.location.reload();
+}, 45000);
 </script>
 </body>
 </html>
