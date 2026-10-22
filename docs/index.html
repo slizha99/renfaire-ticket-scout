@@ -143,7 +143,7 @@
         <div class="title-area">
             <h1>
                 <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
-                <span class="status-pill">● Live | Last Sweep: 11:24:07 PM (Scanned FB Group: Greater Bay Area Costumers Guild (GBACG)...)</span>
+                <span class="status-pill">● Live | Last Sweep: Just Updated</span>
             </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;</p>
@@ -1000,12 +1000,48 @@ function renderTeamState(state) {
             claimBox.innerHTML = `<div class="sub" style="margin-bottom:4px;">Nobody messaging yet</div>`;
         }
         const reports = reportsMap[id] || reportsMap[rawAttr] || [];
+        const badgeEl = row.querySelector('.score-wrap .badge');
+        const verdictEl = row.querySelector('.score-wrap .verdict-text');
+        const fillEl = row.querySelector('.score-wrap .progress-fill');
+        if (badgeEl && !badgeEl.dataset.origText) {
+            badgeEl.dataset.origText = badgeEl.textContent;
+            badgeEl.dataset.origClass = badgeEl.className;
+            if (verdictEl) verdictEl.dataset.origText = verdictEl.textContent;
+            if (fillEl) {
+                fillEl.dataset.origWidth = fillEl.style.width;
+                fillEl.dataset.origClass = fillEl.className;
+            }
+        }
         if (reports.length > 0) {
-            reportBox.innerHTML = reports.map(r => `<div class="report-pill">🚨 <b>Reported by ${esc(r.reporter)}:</b> ${esc(r.reason)} <span class="sub">(${esc(r.time || 'Just now')})</span></div>`).join('');
-            row.style.background = 'rgba(239, 68, 68, 0.08)';
+            reportBox.innerHTML = reports.map(r => `<div class="report-pill" style="display:flex;justify-content:space-between;align-items:center;gap:6px;"><span>🚨 <b>Reported by ${esc(r.reporter)}:</b> ${esc(r.reason)} <span class="sub">(${esc(r.time || 'Just now')})</span></span><button class="sub-del" title="Clear report" onclick="clearReport('${esc(id)}')">✕</button></div>`).join('');
+            row.style.background = 'rgba(239, 68, 68, 0.10)';
+            if (badgeEl) {
+                badgeEl.textContent = '95% Scam Risk';
+                badgeEl.className = 'badge badge-high';
+            }
+            if (verdictEl) {
+                verdictEl.textContent = '🚨 REPORTED SCAM BY GROUP';
+                verdictEl.style.color = '#f87171';
+            }
+            if (fillEl) {
+                fillEl.style.width = '95%';
+                fillEl.className = 'progress-fill badge-high';
+            }
         } else {
             reportBox.innerHTML = '';
             row.style.background = '';
+            if (badgeEl && badgeEl.dataset.origText) {
+                badgeEl.textContent = badgeEl.dataset.origText;
+                badgeEl.className = badgeEl.dataset.origClass;
+            }
+            if (verdictEl && verdictEl.dataset.origText) {
+                verdictEl.textContent = verdictEl.dataset.origText;
+                verdictEl.style.color = '';
+            }
+            if (fillEl && fillEl.dataset.origWidth) {
+                fillEl.style.width = fillEl.dataset.origWidth;
+                fillEl.className = fillEl.dataset.origClass;
+            }
         }
     });
 }
@@ -1265,6 +1301,24 @@ async function reportListing(id) {
     } catch (e) {} finally {
         isDialogOpen = false;
     }
+}
+
+async function clearReport(id) {
+    const cleanId = String(id || '').replace(/^"+|"+$/g, '');
+    if (CURRENT_STATE.reports) delete CURRENT_STATE.reports[cleanId];
+    renderTeamState(CURRENT_STATE);
+    try {
+        await ensureApiBase();
+        const res = await fetch(API_BASE + '/api/clear_report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id: cleanId})
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.state) renderTeamState(data.state);
+        }
+    } catch (e) {}
 }
 
 const savedUser = localStorage.getItem('renfaire_user_name');
