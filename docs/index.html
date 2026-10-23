@@ -143,7 +143,7 @@
         <div class="title-area">
             <h1>
                 <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
-                <span class="status-pill">● Live | Last Sweep: 08:30:22 PM (Scanned FB Group: NorCal Ren Faire Friends...)</span>
+                <span class="status-pill">● Live | Last Sweep: Just Updated</span>
             </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot;</p>
@@ -172,7 +172,7 @@
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-label">Sat Oct 24 Leads (excl. 436 irrelevant)</div>
+            <div class="stat-label">Sat Oct 24 Leads (excl. 438 irrelevant)</div>
             <div class="stat-val">48</div>
         </div>
         <div class="stat-card">
@@ -1990,7 +1990,7 @@ WhatsApp: +1 (209) 820-5603
 <script>
 let isDialogOpen = false;
 let API_BASE = window.location.hostname.endsWith('github.io') ? '' : '';
-let CURRENT_STATE = {"claims": {"vf-oct24-Stephieecee-I can sell you Northern C": {"name": "Akash Samant", "status": "Messaging Seller", "updated_at": "04:50 PM"}, "vf-oct24-Vini-vidi-Selling 1 general admissi": {"name": "Sarah", "status": "Messaged, No Response", "updated_at": "11:47 PM"}, "fb-grp-918786f51a5b": {"name": "Eamon", "status": "Messaging Seller", "updated_at": "09:17 AM"}}, "reports": {"fb-grp-77cc5e5d52a7": [{"reporter": "Sarah", "reason": "Refused PayPal G&S", "time": "11:46 PM"}], "fb-grp-d165451dd3ea": [{"reporter": "Isabella", "reason": "Repeated posts from different regions today", "time": "11:57 PM"}], "fb-grp-918786f51a5b": [{"reporter": "Eamon", "reason": "Fake screenshot, VOIP number", "time": "09:23 AM"}], "web-7bd77903aecb": [{"reporter": "Eamon", "reason": "Sent fake screenshot and were mean", "time": "10:36 AM"}]}, "manual_leads": [], "subscribers": [{"id": "04e001e165", "name": "Sarah", "masked_phone": "(\u2022\u2022\u2022) \u2022\u2022\u2022-6434", "masked_email": "", "created_at": "11:47 PM"}]};
+let CURRENT_STATE = {"claims": {}, "reports": {}, "manual_leads": [], "subscribers": []};
 
 function esc(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -2071,7 +2071,7 @@ function renderTeamState(state) {
     });
 }
 
-const CLOUD_STATE_TOPIC = 'https://ntfy.sh/norcal_renfaire_oct24_team_state_v1';
+const CLOUD_STATE_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a166cbd3536350';
 
 async function ensureApiBase() {
     return API_BASE || '';
@@ -2079,9 +2079,11 @@ async function ensureApiBase() {
 
 async function publishCloudState(stateObj) {
     try {
-        await fetch(CLOUD_STATE_TOPIC, {
-            method: 'POST',
-            body: JSON.stringify(stateObj)
+        localStorage.setItem('renfaire_team_state_backup', JSON.stringify(stateObj));
+        await fetch(CLOUD_STATE_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: 'renfaire_state', data: stateObj })
         });
     } catch (e) {}
 }
@@ -2194,9 +2196,20 @@ async function subscribeAlerts(ev) {
             const mEmail = email.includes('@') ? (email[0] + '***@' + email.split('@')[1]) : '';
             const subId = 'sub-' + Math.random().toString(36).slice(2, 10);
             CURRENT_STATE.subscribers = CURRENT_STATE.subscribers || [];
-            CURRENT_STATE.subscribers.push({ id: subId, name: name || 'Friend', masked_phone: mPhone, masked_email: mEmail, raw_phone: digits, raw_email: email });
+            CURRENT_STATE.subscribers.push({ id: subId, name: name || 'Friend', phone: digits, email: email, masked_phone: mPhone, masked_email: mEmail, raw_phone: digits, raw_email: email, welcome_sent: false });
             renderTeamState(CURRENT_STATE);
             await publishCloudState(CURRENT_STATE);
+            if (digits.length === 10) {
+                fetch('https://textbelt.com/text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: digits,
+                        message: '🏰 Hi ' + (name || 'Friend') + '! You are subscribed to Sat Oct 24 NorCal Ren Faire ticket alerts: https://slizha99.github.io/renfaire-ticket-scout/',
+                        key: 'textbelt'
+                    })
+                }).catch(() => {});
+            }
         }
         msgEl.style.color = '#34d399';
         msgEl.textContent = '✅ Subscribed to instant ticket alerts!';
@@ -2237,21 +2250,12 @@ async function syncTeamState() {
                 return;
             }
         }
-        const r = await fetch(CLOUD_STATE_TOPIC + '/json?poll=1&t=' + Date.now());
+        const r = await fetch(CLOUD_STATE_URL + '?t=' + Date.now());
         if (!r.ok) return;
-        const t = await r.text();
-        const lines = t.trim().split(/\r?\n/).filter(Boolean);
-        for (let i = lines.length - 1; i >= 0; i--) {
-            try {
-                const env = JSON.parse(lines[i]);
-                if (env && env.message && env.message.startsWith('{')) {
-                    const st = JSON.parse(env.message);
-                    if (st && (st.claims || st.reports || st.subscribers)) {
-                        renderTeamState(st);
-                        break;
-                    }
-                }
-            } catch (e) {}
+        const env = await r.json();
+        const st = env && env.data;
+        if (st && (st.claims || st.reports || st.subscribers)) {
+            renderTeamState(st);
         }
     } catch (e) {}
 }
