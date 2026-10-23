@@ -143,7 +143,7 @@
         <div class="title-area">
             <h1>
                 <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
-                <span class="status-pill">● Live | Last Sweep: 11:07:18 AM (Fast HTTP/Reddit done; starting Playwright...)</span>
+                <span class="status-pill">● Live | Last Sweep: Just Updated</span>
             </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot;</p>
@@ -205,7 +205,7 @@
         <tr class="row-item" data-id="vf-oct24-Stephieecee-I can sell you Northern C" data-risk="badge-low">
             <td>
                 <div class="platform-pill">VouchFirst (Oct 24 - SELLING)</div>
-                <div class="sub" style="margin-top:6px;">2026-10-23 17:56:51</div>
+                <div class="sub" style="margin-top:6px;">2026-10-23 18:11:28</div>
             </td>
             <td>
                 <a href="https://www.vouchfirst.com/home/artists/northern-california-renaissance-faire/tickets" target="_blank" class="post-title">[SELLING] I can sell you Northern California Renaissance Faire ↗</a>
@@ -238,7 +238,7 @@
         <tr class="row-item" data-id="vf-oct24-Vini-vidi-Selling 1 general admissi" data-risk="badge-low">
             <td>
                 <div class="platform-pill">VouchFirst (Oct 24 - SELLING)</div>
-                <div class="sub" style="margin-top:6px;">2026-10-23 17:56:51</div>
+                <div class="sub" style="margin-top:6px;">2026-10-23 18:11:28</div>
             </td>
             <td>
                 <a href="https://www.vouchfirst.com/home/artists/northern-california-renaissance-faire/tickets" target="_blank" class="post-title">[SELLING] Selling 1 general admission ticket to the Northern California Renaissance Faire (NorCal Ren Faire) 2026. ↗</a>
@@ -2250,7 +2250,7 @@ Message me if you’re interested. Willing to separate or split tickets.
 <script>
 let isDialogOpen = false;
 let API_BASE = window.location.hostname.endsWith('github.io') ? '' : '';
-let CURRENT_STATE = {"claims": {}, "reports": {}, "manual_leads": [], "subscribers": []};
+let CURRENT_STATE = {"claims": {}, "reports": {"test": 1}, "manual_leads": [], "subscribers": []};
 
 function esc(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -2331,7 +2331,61 @@ function renderTeamState(state) {
     });
 }
 
-const CLOUD_STATE_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a166cbd3536350';
+const CLOUD_STATE_TOPIC = 'https://ntfy.sh/norcal_renfaire_oct24_team_state_v1';
+
+function mergeTeamStateInto(target, incoming) {
+    if (!incoming || typeof incoming !== 'object') return false;
+    let changed = false;
+    target.deleted_ids = target.deleted_ids || [];
+    if (Array.isArray(incoming.deleted_ids)) {
+        incoming.deleted_ids.forEach(d => {
+            if (!target.deleted_ids.includes(d)) {
+                target.deleted_ids.push(d);
+                changed = true;
+            }
+        });
+    }
+    const delSet = new Set(target.deleted_ids);
+    target.claims = target.claims || {};
+    if (incoming.claims && typeof incoming.claims === 'object') {
+        Object.keys(incoming.claims).forEach(k => {
+            if (!delSet.has('claim:' + k) && JSON.stringify(target.claims[k]) !== JSON.stringify(incoming.claims[k])) {
+                target.claims[k] = incoming.claims[k];
+                changed = true;
+            }
+        });
+    }
+    Object.keys(target.claims).forEach(k => {
+        if (delSet.has('claim:' + k)) { delete target.claims[k]; changed = true; }
+    });
+    target.reports = target.reports || {};
+    if (incoming.reports && typeof incoming.reports === 'object') {
+        Object.keys(incoming.reports).forEach(k => {
+            if (!delSet.has('report:' + k) && Array.isArray(incoming.reports[k]) && incoming.reports[k].length > 0) {
+                if (JSON.stringify(target.reports[k]) !== JSON.stringify(incoming.reports[k])) {
+                    target.reports[k] = incoming.reports[k];
+                    changed = true;
+                }
+            }
+        });
+    }
+    Object.keys(target.reports).forEach(k => {
+        if (delSet.has('report:' + k)) { delete target.reports[k]; changed = true; }
+    });
+    target.subscribers = target.subscribers || [];
+    if (Array.isArray(incoming.subscribers)) {
+        const existingSubIds = new Set(target.subscribers.map(s => s.id));
+        incoming.subscribers.forEach(s => {
+            if (s && s.id && !delSet.has('sub:' + s.id) && !existingSubIds.has(s.id)) {
+                target.subscribers.push(s);
+                existingSubIds.add(s.id);
+                changed = true;
+            }
+        });
+    }
+    target.subscribers = target.subscribers.filter(s => s && !delSet.has('sub:' + s.id));
+    return changed;
+}
 
 async function ensureApiBase() {
     return API_BASE || '';
@@ -2340,10 +2394,9 @@ async function ensureApiBase() {
 async function publishCloudState(stateObj) {
     try {
         localStorage.setItem('renfaire_team_state_backup', JSON.stringify(stateObj));
-        await fetch(CLOUD_STATE_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: 'renfaire_state', data: stateObj })
+        await fetch(CLOUD_STATE_TOPIC, {
+            method: 'POST',
+            body: JSON.stringify(stateObj)
         });
     } catch (e) {}
 }
@@ -2483,6 +2536,8 @@ async function subscribeAlerts(ev) {
 
 async function unsubscribeAlert(id) {
     if (!confirm('Remove this alert subscription?')) return;
+    CURRENT_STATE.deleted_ids = CURRENT_STATE.deleted_ids || [];
+    if (!CURRENT_STATE.deleted_ids.includes('sub:' + id)) CURRENT_STATE.deleted_ids.push('sub:' + id);
     CURRENT_STATE.subscribers = (CURRENT_STATE.subscribers || []).filter(s => s.id !== id);
     renderTeamState(CURRENT_STATE);
     if (API_BASE) {
@@ -2510,12 +2565,23 @@ async function syncTeamState() {
                 return;
             }
         }
-        const r = await fetch(CLOUD_STATE_URL + '?t=' + Date.now());
+        const r = await fetch(CLOUD_STATE_TOPIC + '/json?poll=1&since=all&t=' + Date.now());
         if (!r.ok) return;
-        const env = await r.json();
-        const st = env && env.data;
-        if (st && (st.claims || st.reports || st.subscribers)) {
-            renderTeamState(st);
+        const t = await r.text();
+        const lines = t.trim().split(/\r?\n/).filter(Boolean);
+        let anyMerged = false;
+        for (let i = 0; i < lines.length; i++) {
+            try {
+                const env = JSON.parse(lines[i]);
+                if (env && env.message && env.message.startsWith('{')) {
+                    const st = JSON.parse(env.message);
+                    if (mergeTeamStateInto(CURRENT_STATE, st)) anyMerged = true;
+                }
+            } catch (e) {}
+        }
+        if (anyMerged) {
+            localStorage.setItem('renfaire_team_state_backup', JSON.stringify(CURRENT_STATE));
+            renderTeamState(CURRENT_STATE);
         }
     } catch (e) {}
 }
@@ -2534,9 +2600,12 @@ async function claimListing(id) {
         }
         const nowStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
         CURRENT_STATE.claims = CURRENT_STATE.claims || {};
+        CURRENT_STATE.deleted_ids = CURRENT_STATE.deleted_ids || [];
         if (!name.trim()) {
             delete CURRENT_STATE.claims[cleanId];
+            if (!CURRENT_STATE.deleted_ids.includes('claim:' + cleanId)) CURRENT_STATE.deleted_ids.push('claim:' + cleanId);
         } else {
+            CURRENT_STATE.deleted_ids = CURRENT_STATE.deleted_ids.filter(x => x !== 'claim:' + cleanId);
             CURRENT_STATE.claims[cleanId] = { name: name.trim(), status, updated_at: nowStr };
         }
         renderTeamState(CURRENT_STATE);
@@ -2569,6 +2638,7 @@ async function reportListing(id) {
         const reason = prompt("Why is this seller suspicious? (e.g., 'Refused PayPal G&S', 'Sent fake screenshot', 'Asked for Zelle'):");
         if (!reason) return;
         const nowStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+        CURRENT_STATE.deleted_ids = (CURRENT_STATE.deleted_ids || []).filter(x => x !== 'report:' + cleanId);
         CURRENT_STATE.reports = CURRENT_STATE.reports || {};
         CURRENT_STATE.reports[cleanId] = CURRENT_STATE.reports[cleanId] || [];
         CURRENT_STATE.reports[cleanId].push({ reporter: name.trim(), reason: reason.trim(), time: nowStr });
@@ -2594,6 +2664,8 @@ async function reportListing(id) {
 
 async function clearReport(id) {
     const cleanId = String(id || '').replace(/^"+|"+$/g, '');
+    CURRENT_STATE.deleted_ids = CURRENT_STATE.deleted_ids || [];
+    if (!CURRENT_STATE.deleted_ids.includes('report:' + cleanId)) CURRENT_STATE.deleted_ids.push('report:' + cleanId);
     if (CURRENT_STATE.reports) delete CURRENT_STATE.reports[cleanId];
     renderTeamState(CURRENT_STATE);
     try {
@@ -2617,11 +2689,20 @@ const savedUser = localStorage.getItem('renfaire_user_name');
 if (savedUser && document.getElementById('subName')) {
     document.getElementById('subName').value = savedUser;
 }
+try {
+    const localBackupRaw = localStorage.getItem('renfaire_team_state_backup');
+    if (localBackupRaw) {
+        const localBackup = JSON.parse(localBackupRaw);
+        if (mergeTeamStateInto(CURRENT_STATE, localBackup)) {
+            publishCloudState(CURRENT_STATE);
+        }
+    }
+} catch (e) {}
 renderTeamState(CURRENT_STATE);
 checkLiveTunnelFromGitHubPages();
 checkNewRowsForBrowserAlert();
 syncTeamState();
-setInterval(syncTeamState, 3000);
+setInterval(syncTeamState, 20000);
 setInterval(checkLiveTunnelFromGitHubPages, 15000);
 setInterval(() => {
     const activeTag = document.activeElement ? document.activeElement.tagName : '';
