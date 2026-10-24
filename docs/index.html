@@ -85,17 +85,24 @@
         border-radius: 4px; font-size: 11px; margin-left: 4px;
     }
     .action-btns { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-    .btn-claim, .btn-report {
+    .btn-claim, .btn-sold, .btn-report {
         cursor: pointer; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 600;
         border: 1px solid var(--border); text-align: left; transition: 0.15s;
     }
     .btn-claim { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: #2563eb; }
     .btn-claim:hover { background: rgba(59, 130, 246, 0.3); }
+    .btn-sold { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; border-color: #64748b; }
+    .btn-sold:hover { background: rgba(148, 163, 184, 0.28); }
     .btn-report { background: rgba(239, 68, 68, 0.12); color: #fca5a5; border-color: #dc2626; }
     .btn-report:hover { background: rgba(239, 68, 68, 0.28); }
     .claim-pill {
         display: inline-block; background: rgba(59, 130, 246, 0.25); border: 1px solid #3b82f6;
         color: #bfdbfe; padding: 5px 9px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 6px;
+    }
+    .sold-pill {
+        display: inline-flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%;
+        background: rgba(100, 116, 139, 0.28); border: 1px solid #64748b;
+        color: #e2e8f0; padding: 5px 9px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 6px;
     }
     .report-pill {
         background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444;
@@ -143,7 +150,7 @@
         <div class="title-area">
             <h1>
                 <span>🏰 NorCal Ren Faire (Sat, Oct 24, 2026) — Ticket Scout</span>
-                <span class="status-pill">● Live | Last Sweep: 09:27:55 PM (Scanned FB Group: NorCal Ren Faire Official Fan Community (Search: ticket)...)</span>
+                <span class="status-pill">● Live | Last Sweep: 09:36:25 PM (Filtered Stale VouchFirst Posts)</span>
             </h1>
             <p>Monitoring Pretix, Etix, VouchFirst, 9 Craigslists, Reddit, Nextdoor, Brokers, FB Marketplace & 5 FB Groups</p>
             <p style="margin-top:4px; font-size:11.5px; color:#93c5fd;">🔎 <b>Search Terms:</b> &quot;renaissance faire&quot;, &quot;ren faire&quot;, &quot;renaissance fair&quot;, &quot;ren fair&quot;, &quot;casa de fruta&quot;, &quot;norcal ren&quot;, &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot; &nbsp;|&nbsp; 🧠 <b>Auto-Learned:</b> &quot;norcal ren faire&quot;, &quot;nor cal ren faire&quot;, &quot;casa de frutas&quot;, &quot;norcal renfaire&quot;, &quot;renfaire&quot;, &quot;norcal ren fair&quot;, &quot;nor cal ren fair&quot;, &quot;ncrf&quot;, &quot;renfair&quot;, &quot;halloween fantasy weekend&quot;</p>
@@ -172,7 +179,7 @@
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-label">Sat Oct 24 Leads (excl. 533 irrelevant)</div>
+            <div class="stat-label">Sat Oct 24 Leads (excl. 534 irrelevant)</div>
             <div class="stat-val">80</div>
         </div>
         <div class="stat-card">
@@ -230,6 +237,7 @@
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;reddit-post-1xd3n0a&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;reddit-post-1xd3n0a&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;reddit-post-1xd3n0a&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -267,6 +275,7 @@ Message me for details if you’re interested.… See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-8b9c1fd04a3b&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-8b9c1fd04a3b&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-8b9c1fd04a3b&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -303,6 +312,7 @@ I’m hoping someone</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-e6ac9b4e09ea&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-e6ac9b4e09ea&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-e6ac9b4e09ea&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -339,6 +349,7 @@ I’m hoping som</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-ecc942111407&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-ecc942111407&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-ecc942111407&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -379,6 +390,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-57d7d2430d1c&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-57d7d2430d1c&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-57d7d2430d1c&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -419,6 +431,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-53392104c181&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-53392104c181&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-53392104c181&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -454,6 +467,7 @@ Sadly, I won’t be able to attend the final Northern California Renaissance Fai
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-77cc5e5d52a7&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-77cc5e5d52a7&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-77cc5e5d52a7&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -490,6 +504,7 @@ Stace</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-d165451dd3ea&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-d165451dd3ea&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-d165451dd3ea&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -526,6 +541,7 @@ If anyone is interested, please send me a message for details!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-7d804068fb2c&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-7d804068fb2c&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-7d804068fb2c&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -559,6 +575,7 @@ If anyone is interested, please send me a message for details!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;extra-google-GROUP ADMIN HERE RENAISSANCE FAIRE &quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -592,6 +609,7 @@ If anyone is interested, please send me a message for details!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;extra-google-Facebook\u00a0\u00b7\u00a0The Northern California &quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -625,6 +643,7 @@ If anyone is interested, please send me a message for details!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;extra-google-... Northern California Renaissance&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;extra-google-... Northern California Renaissance&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;extra-google-... Northern California Renaissance&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -661,6 +680,7 @@ Looking for 1 ren faire ticket today 10/18! | Facebook
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-74eb0df235d6&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-74eb0df235d6&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-74eb0df235d6&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -697,6 +717,7 @@ Northern California Renaissance Faire Tickets Buy&amp;Sell 2026
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-f197cb95f3a5&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-f197cb95f3a5&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-f197cb95f3a5&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -734,6 +755,7 @@ For the Northern California Renaissance Faire, Admin is coordinating enquiries f
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-3b881178c293&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-3b881178c293&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-3b881178c293&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -771,6 +793,7 @@ Selling (4) NorCal Ren Faire tixs, 10/24 : r/</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-39ad1004a977&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-39ad1004a977&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-39ad1004a977&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -808,6 +831,7 @@ I&#x27;M SELLING NORTHERN CALIFORNIA RENAISSANCE FAIRE SATURDAYS TICKETS Due to 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-918786f51a5b&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-918786f51a5b&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-918786f51a5b&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -844,6 +868,7 @@ i have three tickets for this weekends (10/3) NorCal ren faire, as well as a par
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-c732c1355c6c&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-c732c1355c6c&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-c732c1355c6c&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -881,6 +906,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-9fbfd845a386&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-9fbfd845a386&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-9fbfd845a386&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -922,6 +948,7 @@ See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-db53b636c207&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-db53b636c207&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-db53b636c207&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -962,6 +989,7 @@ TICKET OPTIONS
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-a4291b70b34f&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-a4291b70b34f&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-a4291b70b34f&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -998,6 +1026,7 @@ Looking for 2 tickets for NorCal ren faire tomorrow 10/19! ... Loryn Ferreira �
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-0cc9890282a7&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-0cc9890282a7&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-0cc9890282a7&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1039,6 +1068,7 @@ Write a public commen</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-73da0c53ce89&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-73da0c53ce89&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-73da0c53ce89&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1079,6 +1109,7 @@ Quic</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-73bba0e0d193&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-73bba0e0d193&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-73bba0e0d193&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1119,6 +1150,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-861fe1a1e93e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-861fe1a1e93e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-861fe1a1e93e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1156,6 +1188,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-955f60b0c361&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-955f60b0c361&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-955f60b0c361&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1192,6 +1225,7 @@ For the Northern California Renaissance Faire, Admin is coordinating enquiries f
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-770dc6e6eb0a&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-770dc6e6eb0a&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-770dc6e6eb0a&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1228,6 +1262,7 @@ Looking for 4 tickets to NorCal Ren Faire for this Sunday ... Frank Niebauer ▻
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-7aa8735bec33&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-7aa8735bec33&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-7aa8735bec33&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1264,6 +1299,7 @@ I&#x27;m looking to buy 2 general admission tickets for the NorCal Ren Faire on 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-8ebe3b55c40e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-8ebe3b55c40e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-8ebe3b55c40e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1300,6 +1336,7 @@ I&#x27;m looking to buy 2 general admission tickets for the NorCal Ren Faire on 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-8291e8a6c808&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-8291e8a6c808&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-8291e8a6c808&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1338,6 +1375,7 @@ Norcal Renaissance Faire ticket</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-2ba67a22b45f&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-2ba67a22b45f&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-2ba67a22b45f&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1376,6 +1414,7 @@ Buying (NorCal Ren Faire - Sat Oct 24th) : r/TicketResale
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-a347076ced7d&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-a347076ced7d&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-a347076ced7d&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1412,6 +1451,7 @@ Selling (4) NorCal Ren Faire tixs, 10/24. USA. $75 ea. Send me a message if ... 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-7bd77903aecb&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-7bd77903aecb&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-7bd77903aecb&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1448,6 +1488,7 @@ Oct 7, 2026 · Stacy Gomez Northern California Renaissance faire verified ticke
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;web-92befef140fb&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;web-92befef140fb&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;web-92befef140fb&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1487,6 +1528,7 @@ Are you looking for tickets to The Nor</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-7a653affe5eb&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-7a653affe5eb&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-7a653affe5eb&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1524,6 +1566,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-6ee5ed198c4c&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-6ee5ed198c4c&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-6ee5ed198c4c&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1561,6 +1604,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-3a05702b9b10&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-3a05702b9b10&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-3a05702b9b10&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1600,6 +1644,7 @@ Email: ticketexcha</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-3d4908df630e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-3d4908df630e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-3d4908df630e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1640,6 +1685,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-cc2da00ad5fb&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-cc2da00ad5fb&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-cc2da00ad5fb&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1677,6 +1723,7 @@ Is anyone selling tickets for the Ren Faire on October 24th? Please let me know 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-d9e263774e0f&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-d9e263774e0f&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-d9e263774e0f&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1716,6 +1763,7 @@ See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-55fd0cc81272&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-55fd0cc81272&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-55fd0cc81272&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1753,6 +1801,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-649471df7f9a&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-649471df7f9a&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-649471df7f9a&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1792,6 +1841,7 @@ The Northern California Renaissance Faire
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-c3074c60e8f5&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-c3074c60e8f5&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-c3074c60e8f5&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1828,6 +1878,7 @@ Looking to buy tickets for 10/24!! It&#x27;s my birthday and a couple of my frie
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-a1a391abbf16&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-a1a391abbf16&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-a1a391abbf16&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1867,6 +1918,7 @@ Submit your first comme</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-e583adba15f5&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-e583adba15f5&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-e583adba15f5&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1900,6 +1952,7 @@ Submit your first comme</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-scam-alert-maya-allison-352&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-scam-alert-maya-allison-352&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-scam-alert-maya-allison-352&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1937,6 +1990,7 @@ Ready for a day of medieval adventure, live entertainment, jousting, artisan sho
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-99029522c69e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-99029522c69e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-99029522c69e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -1974,6 +2028,7 @@ Write an answer…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-0a4a00763cd4&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-0a4a00763cd4&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-0a4a00763cd4&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2013,6 +2068,7 @@ Submit your first com</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-958012b33866&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-958012b33866&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-958012b33866&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2050,6 +2106,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-0bf5b7291c0e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-0bf5b7291c0e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-0bf5b7291c0e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2086,6 +2143,7 @@ Hi! I&#x27;m looking to purchase 2 nor cal ren faire tickets for tomorrow (Sat, 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-e6d999bff85d&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-e6d999bff85d&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-e6d999bff85d&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2123,6 +2181,7 @@ Some members with plans to attend the Northern California Renaissance Faire have
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-5838928db49b&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-5838928db49b&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-5838928db49b&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2163,6 +2222,7 @@ See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-c4e15098cbe1&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-c4e15098cbe1&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-c4e15098cbe1&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2199,6 +2259,7 @@ Hi! I&#x27;m looking to purchase 2 ren faire tickets for tomorrow (Sat, 10/24). 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-38de9abd01cc&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-38de9abd01cc&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-38de9abd01cc&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2236,6 +2297,7 @@ O</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-4e688808cda2&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-4e688808cda2&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-4e688808cda2&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2273,6 +2335,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-f90ca82fc38b&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-f90ca82fc38b&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-f90ca82fc38b&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2313,6 +2376,7 @@ See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-feb30cad3a42&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-feb30cad3a42&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-feb30cad3a42&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2352,6 +2416,7 @@ The Northern California Renaissance Faire
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-37bb2e9f088a&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-37bb2e9f088a&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-37bb2e9f088a&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2388,6 +2453,7 @@ Hi! I need 5 tickets for NorCal Ren Faire (10/25). I will only be buying at the 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-5c7f3d016c29&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-5c7f3d016c29&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-5c7f3d016c29&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2428,6 +2494,7 @@ Submit your first comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-88e470089cff&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-88e470089cff&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-88e470089cff&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2466,6 +2533,7 @@ Submit your first comm</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-c2e7888065fd&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-c2e7888065fd&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-c2e7888065fd&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2505,6 +2573,7 @@ Are you looking for tickets to The Northern California Renaissance Fair</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-3f175a8658cc&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-3f175a8658cc&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-3f175a8658cc&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2543,6 +2612,7 @@ We have a limited number of verified and legitimate tickets av</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-de738fd21435&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-de738fd21435&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-de738fd21435&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2582,6 +2652,7 @@ See more
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-058f386367dc&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-058f386367dc&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-058f386367dc&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2622,6 +2693,7 @@ Looking for 2 tickets for this Saturday!!!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-8e158825dcfe&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-8e158825dcfe&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-8e158825dcfe&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2655,6 +2727,7 @@ Looking for 2 tickets for this Saturday!!!
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;reddit-scam-alert-capoutx&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;reddit-scam-alert-capoutx&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;reddit-scam-alert-capoutx&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2691,6 +2764,7 @@ Hello!! I&#x27;m looking to trade a 10/24 GA ticket+parking pass for a 10/25 GA 
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-118097eadac1&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-118097eadac1&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-118097eadac1&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2732,6 +2806,7 @@ Submit your first comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-cf63ed7d4cb5&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-cf63ed7d4cb5&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-cf63ed7d4cb5&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2769,6 +2844,7 @@ Come dressed for the invasion, bring </div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-961c826470ad&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-961c826470ad&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-961c826470ad&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2806,6 +2882,7 @@ Write a public comment…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-07452e4dd12d&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-07452e4dd12d&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-07452e4dd12d&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2846,6 +2923,7 @@ TICKET OPTIONS
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-806a336d1715&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-806a336d1715&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-806a336d1715&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2883,6 +2961,7 @@ Write an answer…
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-iso-f224da1985df&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-iso-f224da1985df&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-iso-f224da1985df&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2920,6 +2999,7 @@ Northern California Renaissance Faire Tickets Buy &amp; Sell
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-14c0f7387eed&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-14c0f7387eed&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-14c0f7387eed&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2957,6 +3037,7 @@ If you’re planning to join the festivi</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-fcbf60884f84&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-fcbf60884f84&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-fcbf60884f84&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -2993,6 +3074,7 @@ Come dressed for the invasion, bring your c</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-4f528c2d83da&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-4f528c2d83da&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-4f528c2d83da&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3033,6 +3115,7 @@ Message me if you’re interested. Willing to separate or split tickets.
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-7b9e855e53b4&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-7b9e855e53b4&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-7b9e855e53b4&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3073,6 +3156,7 @@ Message me if you’re interested! Willing to sell tickets sepa</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-367f06dd85f1&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-367f06dd85f1&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-367f06dd85f1&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3110,6 +3194,7 @@ Message me for details if you’re interested.
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-3f07110443c0&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-3f07110443c0&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-3f07110443c0&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3150,6 +3235,7 @@ Message me if you’re intere</div>
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-690d25cb9f2e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-690d25cb9f2e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-690d25cb9f2e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3185,6 +3271,7 @@ Planning to attend the Northern California Renaissance Faire? I have 6 tickets a
                 <div class="claim-status-box"></div>
                 <div class="action-btns">
                     <button class="btn-claim" onclick='claimListing(&quot;fb-grp-e85d2637ed3e&quot;)'>💬 I'm Messaging</button>
+                    <button class="btn-sold" onclick='markSoldListing(&quot;fb-grp-e85d2637ed3e&quot;)'>❌ Sold to Someone Else</button>
                     <button class="btn-report" onclick='reportListing(&quot;fb-grp-e85d2637ed3e&quot;)'>🚨 Report Suspicious</button>
                 </div>
             </td>
@@ -3225,8 +3312,13 @@ function renderTeamState(state) {
         const claimBox = row.querySelector('.claim-status-box');
         const reportBox = row.querySelector('.user-reports-box');
         const claim = claimsMap[id] || claimsMap[rawAttr];
+        const isSoldOther = Boolean(claim && claim.status && claim.status.toLowerCase().includes('sold to someone else'));
         if (claim && claim.name) {
-            claimBox.innerHTML = `<div class="claim-pill">💬 <b>${esc(claim.name)}</b>: ${esc(claim.status)} <span class="sub">(${esc(claim.updated_at || 'Just now')})</span></div>`;
+            if (isSoldOther) {
+                claimBox.innerHTML = `<div class="sold-pill"><span>❌ <b>Sold to Someone Else</b> <span class="sub">(by ${esc(claim.name)}, ${esc(claim.updated_at || 'Just now')})</span></span><button class="sub-del" title="Undo Sold status" onclick="clearClaim('${esc(id)}')">✕</button></div>`;
+            } else {
+                claimBox.innerHTML = `<div class="claim-pill">💬 <b>${esc(claim.name)}</b>: ${esc(claim.status)} <span class="sub">(${esc(claim.updated_at || 'Just now')})</span></div>`;
+            }
         } else {
             claimBox.innerHTML = `<div class="sub" style="margin-bottom:4px;">Nobody messaging yet</div>`;
         }
@@ -3234,6 +3326,7 @@ function renderTeamState(state) {
         const badgeEl = row.querySelector('.score-wrap .badge');
         const verdictEl = row.querySelector('.score-wrap .verdict-text');
         const fillEl = row.querySelector('.score-wrap .progress-fill');
+        const titleLinkEl = row.querySelector('.post-title');
         if (badgeEl && !badgeEl.dataset.origText) {
             badgeEl.dataset.origText = badgeEl.textContent;
             badgeEl.dataset.origClass = badgeEl.className;
@@ -3246,6 +3339,8 @@ function renderTeamState(state) {
         if (reports.length > 0) {
             reportBox.innerHTML = reports.map(r => `<div class="report-pill" style="display:flex;justify-content:space-between;align-items:center;gap:6px;"><span>🚨 <b>Reported by ${esc(r.reporter)}:</b> ${esc(r.reason)} <span class="sub">(${esc(r.time || 'Just now')})</span></span><button class="sub-del" title="Clear report" onclick="clearReport('${esc(id)}')">✕</button></div>`).join('');
             row.style.background = 'rgba(239, 68, 68, 0.10)';
+            row.style.opacity = '';
+            if (titleLinkEl) titleLinkEl.style.textDecoration = '';
             if (badgeEl) {
                 badgeEl.textContent = '95% Scam Risk';
                 badgeEl.className = 'badge badge-high';
@@ -3258,9 +3353,28 @@ function renderTeamState(state) {
                 fillEl.style.width = '95%';
                 fillEl.className = 'progress-fill badge-high';
             }
+        } else if (isSoldOther) {
+            reportBox.innerHTML = '';
+            row.style.background = 'rgba(15, 23, 42, 0.55)';
+            row.style.opacity = '0.52';
+            if (titleLinkEl) titleLinkEl.style.textDecoration = 'line-through';
+            if (badgeEl) {
+                badgeEl.textContent = 'SOLD OUT';
+                badgeEl.className = 'badge badge-high';
+            }
+            if (verdictEl) {
+                verdictEl.textContent = '❌ SOLD TO SOMEONE ELSE';
+                verdictEl.style.color = '#94a3b8';
+            }
+            if (fillEl) {
+                fillEl.style.width = '100%';
+                fillEl.className = 'progress-fill badge-high';
+            }
         } else {
             reportBox.innerHTML = '';
             row.style.background = '';
+            row.style.opacity = '';
+            if (titleLinkEl) titleLinkEl.style.textDecoration = '';
             if (badgeEl && badgeEl.dataset.origText) {
                 badgeEl.textContent = badgeEl.dataset.origText;
                 badgeEl.className = badgeEl.dataset.origClass;
@@ -3572,6 +3686,59 @@ async function claimListing(id) {
     } catch (e) {} finally {
         isDialogOpen = false;
     }
+}
+
+async function markSoldListing(id) {
+    isDialogOpen = true;
+    try {
+        const cleanId = String(id || '').replace(/^"+|"+$/g, '');
+        let savedName = localStorage.getItem('renfaire_user_name') || '';
+        if (!savedName) {
+            const prompted = prompt("Your name (for marking 'Sold to Someone Else'):", "Sarah");
+            if (prompted === null) return;
+            savedName = prompted.trim() || "Group Member";
+            localStorage.setItem('renfaire_user_name', savedName);
+        }
+        const nowStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+        CURRENT_STATE.claims = CURRENT_STATE.claims || {};
+        CURRENT_STATE.deleted_ids = (CURRENT_STATE.deleted_ids || []).filter(x => x !== 'claim:' + cleanId);
+        CURRENT_STATE.claims[cleanId] = { name: savedName, status: "Sold to Someone Else", updated_at: nowStr };
+        renderTeamState(CURRENT_STATE);
+        if (API_BASE) {
+            const res = await fetch(API_BASE + '/api/claim', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: cleanId, name: savedName, status: "Sold to Someone Else"})
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.state) renderTeamState(data.state);
+            }
+        } else {
+            await publishCloudState(CURRENT_STATE);
+        }
+    } catch (e) {} finally {
+        isDialogOpen = false;
+    }
+}
+
+async function clearClaim(id) {
+    const cleanId = String(id || '').replace(/^"+|"+$/g, '');
+    CURRENT_STATE.deleted_ids = CURRENT_STATE.deleted_ids || [];
+    if (!CURRENT_STATE.deleted_ids.includes('claim:' + cleanId)) CURRENT_STATE.deleted_ids.push('claim:' + cleanId);
+    if (CURRENT_STATE.claims) delete CURRENT_STATE.claims[cleanId];
+    renderTeamState(CURRENT_STATE);
+    try {
+        if (API_BASE) {
+            await fetch(API_BASE + '/api/claim', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: cleanId, name: '', status: ''})
+            });
+        } else {
+            await publishCloudState(CURRENT_STATE);
+        }
+    } catch (e) {}
 }
 
 async function reportListing(id) {
